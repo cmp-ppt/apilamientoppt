@@ -32,12 +32,12 @@ export default function Header() {
   return (
     <header className="scada-panel app-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20, padding: '10px 18px', flexWrap: 'wrap' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-        <div style={{ width: 42, height: 42, borderRadius: 4, background: '#f6f8fb', border: '1px solid #e2e7ef', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-          <img src={cmpLogo} alt="CMP" style={{ height: 30, width: 'auto', display: 'block' }} />
+        <div style={{ height: 56, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <img src={cmpLogo} alt="CMP" style={{ height: 52, width: 'auto', display: 'block' }} />
         </div>
         <div>
           <h1 className="font-mono-scada" style={{ fontSize: 15, fontWeight: 700, letterSpacing: 1, color: '#182a44', margin: 0 }}>
-            ACOPIO Y SECADO <span style={{ color: '#1a73e8' }}>·</span> SCADA
+            ACOPIO Y SECADO
           </h1>
           <p className="scada-label" style={{ marginTop: 2, letterSpacing: 1 }}>Puerto Punta Totoralillo · CMP — Compañía Minera del Pacífico</p>
         </div>
