@@ -1,0 +1,208 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0a0e17;
+  --panel: #0f1520;
+  --panel-header: #131b2a;
+  --border: #1a2435;
+  --run: #00e676;
+  --warn: #ffab00;
+  --alarm: #ff1744;
+  --info: #00e5ff;
+  --accent: #448aff;
+  --txt: #e0e6f0;
+  --txt-dim: #6b7a94;
+  --txt-muted: #3a4a60;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--txt);
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-mono-scada {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+}
+
+.scada-label {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 10px;
+  color: var(--txt-dim);
+}
+
+.scada-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.scada-panel-header {
+  background: var(--panel-header);
+  border-bottom: 1px solid var(--border);
+}
+
+.glow-run {
+  box-shadow: 0 0 8px #00e67644, 0 0 2px #00e67688;
+}
+.glow-warn {
+  box-shadow: 0 0 8px #ffab0044, 0 0 2px #ffab0088;
+}
+.glow-alarm {
+  box-shadow: 0 0 8px #ff174444, 0 0 2px #ff174488;
+}
+.glow-info {
+  box-shadow: 0 0 8px #00e5ff44, 0 0 2px #00e5ff88;
+}
+
+.kpi-value-glow {
+  text-shadow: 0 0 12px currentColor;
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 currentColor;
+  }
+  50% {
+    opacity: 0.65;
+    box-shadow: 0 0 0 4px transparent;
+  }
+}
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.alarm-row-bg {
+  background: #ff174433;
+}
+
+/* scrollbars */
+.scada-scroll::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+.scada-scroll::-webkit-scrollbar-track {
+  background: var(--panel);
+}
+.scada-scroll::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+.scada-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* matrix cell grid */
+.matrix-cell {
+  flex: none;
+  box-sizing: border-box;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.matrix-sticky-col {
+  position: sticky;
+  left: 0;
+  background: var(--panel);
+  z-index: 2;
+}
+
+input[type='text'],
+input[type='number'] {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+@media (max-width: 980px) {
+  .main-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 720px) {
+  #dash {
+    padding: 10px 10px 24px !important;
+  }
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .app-header {
+    padding: 10px 12px !important;
+    gap: 10px !important;
+  }
+  .app-header h1 {
+    font-size: 13px !important;
+  }
+  .tab-bar {
+    width: 100%;
+  }
+  .tab-bar button {
+    flex: 1 1 auto;
+    padding: 8px 8px !important;
+    font-size: 10px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    position: static !important;
+    left: auto !important;
+    width: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+    clip: auto !important;
+    white-space: normal !important;
+  }
+  #dash {
+    padding: 0 !important;
+    background: #fff !important;
+  }
+  .matrix-scroll {
+    overflow: visible !important;
+  }
+  @page {
+    size: A3 landscape;
+    margin: 8mm;
+  }
+}
+.print-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
