@@ -74,7 +74,11 @@ export default function EstadoMatrix() {
                 <SectorTag sector={row.sector} />
               </div>
               {row.cells.map((c) => {
-                const bg = c.state === 'fresca' && c.isBad ? CONTAM_BG : STATE_BG[c.state];
+                const bg = c.state === 'fresca' && c.isBad
+                  ? CONTAM_BG
+                  : c.state === 'secado'
+                    ? lerpColor('#448aff', '#00e676', Math.min(1, (c.dias || 0) / DIAS_RECOMENDADOS))
+                    : STATE_BG[c.state];
                 return (
                   <div
                     key={c.day}
