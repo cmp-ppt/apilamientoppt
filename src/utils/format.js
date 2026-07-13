@@ -52,10 +52,10 @@ export function specPass(paramKey, value) {
 }
 
 export function humColor(h) {
-  if (h == null) return '#6b7a94';
-  if (h > TML) return '#ff1744';
-  if (h > TML - 0.4) return '#ffab00';
-  return '#00e676';
+  if (h == null) return '#54637a';
+  if (h > TML) return '#dc2626';
+  if (h > TML - 0.4) return '#ef9b3a';
+  return '#1f9d55';
 }
 
 export function humWord(h) {
@@ -66,14 +66,14 @@ export function humWord(h) {
 }
 
 export function feColor(v) {
-  if (v >= 65.5) return { bg: '#00e676', fg: '#04160c' };
+  if (v >= 65.5) return { bg: '#1f9d55', fg: '#04160c' };
   if (v >= 65.2) return { bg: '#8cc63e', fg: '#12200a' };
-  if (v >= 65.0) return { bg: '#ffab00', fg: '#2a1c00' };
-  return { bg: '#ff1744', fg: '#ffffff' };
+  if (v >= 65.0) return { bg: '#ef9b3a', fg: '#2a1c00' };
+  return { bg: '#dc2626', fg: '#ffffff' };
 }
 
 export function humCellColor(v) {
-  if (v > 9) return { bg: '#ff1744', fg: '#ffffff' };
-  if (v > 8.4) return { bg: '#ffab00', fg: '#2a1c00' };
-  return { bg: '#00e676', fg: '#04160c' };
+  if (v > 9) return { bg: '#dc2626', fg: '#ffffff' };
+  if (v > 8.4) return { bg: '#ef9b3a', fg: '#2a1c00' };
+  return { bg: '#1f9d55', fg: '#04160c' };
 }

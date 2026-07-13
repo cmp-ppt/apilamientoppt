@@ -10,7 +10,7 @@ export default function KpiStrip({ kpis, columns }) {
           >
             {k.value}
           </div>
-          <div style={{ fontSize: 10, color: '#6b7a94', marginTop: 2, fontWeight: 500 }}>{k.sub}</div>
+          <div style={{ fontSize: 10, color: '#54637a', marginTop: 2, fontWeight: 500 }}>{k.sub}</div>
         </div>
       ))}
     </div>

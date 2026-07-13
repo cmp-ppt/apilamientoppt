@@ -5,9 +5,9 @@ import DayHeaderRow from './DayHeaderRow';
 import PileView from './PileView';
 import SectorTag from './SectorTag';
 
-const STATE_BG = { fresca: '#448aff', secado: '#00e676', libre: '#131b2a' };
+const STATE_BG = { fresca: '#3f77e8', secado: '#1f9d55', libre: '#ffffff' };
 const STATE_LABEL = { fresca: 'FRESCA', secado: 'SECADO', libre: 'LIBRE' };
-const CONTAM_BG = 'repeating-linear-gradient(45deg,#448aff,#448aff 4px,#ff1744 4px,#ff1744 6px)';
+const CONTAM_BG = 'repeating-linear-gradient(45deg,#3f77e8,#3f77e8 4px,#dc2626 4px,#dc2626 6px)';
 
 export default function EstadoMatrix() {
   const { cycle, setRefDay, requestReset, refDay, importExcel, setModal } = useAcopio();
@@ -41,20 +41,20 @@ export default function EstadoMatrix() {
     <div className="scada-panel" style={{ padding: '12px 14px' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 10, flexWrap: 'wrap' }}>
         <div>
-          <div className="scada-label" style={{ color: '#e0e6f0', fontSize: 11 }}>OCUPACIÓN POR FEEDER — {canchaTitle.toUpperCase()}</div>
-          <div style={{ fontSize: 10.5, color: '#6b7a94', marginTop: 2 }}>Selecciona un día (columna cian) y haz clic en la celda para cambiar el estado · rayado = fresca sobre secado</div>
+          <div className="scada-label" style={{ color: '#182a44', fontSize: 11 }}>OCUPACIÓN POR FEEDER — {canchaTitle.toUpperCase()}</div>
+          <div style={{ fontSize: 10.5, color: '#54637a', marginTop: 2 }}>Selecciona un día (columna cian) y haz clic en la celda para cambiar el estado · rayado = fresca sobre secado</div>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="no-print" onClick={requestReset} style={smallBtn}>BORRAR DÍA {String(refDay).padStart(2, '0')}</button>
-          <button className="no-print" onClick={() => fileRef.current?.click()} title="Importar humedad y Ley Fe desde Excel — solo se aplican a feeders en acopio fresco" style={{ ...smallBtn, background: '#448aff', color: '#0a0e17', borderColor: '#448aff' }}>IMPORTAR EXCEL</button>
+          <button className="no-print" onClick={() => fileRef.current?.click()} title="Importar humedad y Ley Fe desde Excel — solo se aplican a feeders en acopio fresco" style={{ ...smallBtn, background: '#3f77e8', color: '#eef1f6', borderColor: '#3f77e8' }}>IMPORTAR EXCEL</button>
           <input ref={fileRef} type="file" accept=".xlsx" onChange={onImport} style={{ display: 'none' }} />
         </div>
       </div>
 
       <div style={{ display: 'flex', gap: 14, marginBottom: 10, flexWrap: 'wrap' }}>
-        <Legend color="#448aff" label="Acopio fresca" />
-        <Legend color="#00e676" label="Secado" />
-        <Legend color="#131b2a" border label="Libre" />
+        <Legend color="#3f77e8" label="Acopio fresca" />
+        <Legend color="#1f9d55" label="Secado" />
+        <Legend color="#ffffff" border label="Libre" />
         <Legend gradient={CONTAM_BG} label={`Acopio sobre secado (${contamTotal})`} />
       </div>
 
@@ -66,7 +66,7 @@ export default function EstadoMatrix() {
           <DayHeaderRow dayHeaders={dayHeaders} onSelectDay={setRefDay} />
           {rowsEstado.map((row) => (
             <div key={row.sector} style={{ display: 'flex', alignItems: 'stretch' }}>
-              <div className="font-mono-scada matrix-sticky-col" style={{ width: 62, flex: 'none', display: 'flex', alignItems: 'center', gap: 4, padding: '0 6px', borderRight: '1px solid #1a2435', borderBottom: '1px solid #1a2435', fontWeight: 700, fontSize: 10.5, color: '#00e5ff' }}>
+              <div className="font-mono-scada matrix-sticky-col" style={{ width: 62, flex: 'none', display: 'flex', alignItems: 'center', gap: 4, padding: '0 6px', borderRight: '1px solid #e2e7ef', borderBottom: '1px solid #e2e7ef', fontWeight: 700, fontSize: 10.5, color: '#1a73e8' }}>
                 <SectorTag sector={row.sector} />
               </div>
               {row.cells.map((c) => {
@@ -79,7 +79,7 @@ export default function EstadoMatrix() {
                     className="matrix-cell"
                     style={{
                       width: 34, height: 30, background: bg, cursor: 'pointer',
-                      boxShadow: c.isBad ? 'inset 0 0 0 2px #ff1744' : c.isRef ? 'inset 0 0 0 2px #00e5ff' : 'none',
+                      boxShadow: c.isBad ? 'inset 0 0 0 2px #dc2626' : c.isRef ? 'inset 0 0 0 2px #1a73e8' : 'none',
                       opacity: c.isRef ? 1 : 0.85,
                     }}
                   />
@@ -95,14 +95,14 @@ export default function EstadoMatrix() {
 
 function Legend({ color, gradient, border, label }) {
   return (
-    <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, color: '#6b7a94', fontWeight: 500 }}>
-      <span style={{ width: 13, height: 13, borderRadius: 3, background: gradient || color, border: border ? '1px solid #3a4a60' : 'none' }} />
+    <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, color: '#54637a', fontWeight: 500 }}>
+      <span style={{ width: 13, height: 13, borderRadius: 3, background: gradient || color, border: border ? '1px solid #cdd6e2' : 'none' }} />
       {label}
     </span>
   );
 }
 
 const smallBtn = {
-  border: '1px solid #1a2435', background: '#131b2a', color: '#6b7a94', borderRadius: 4, padding: '5px 10px',
+  border: '1px solid #e2e7ef', background: '#f6f8fb', color: '#54637a', borderRadius: 4, padding: '5px 10px',
   cursor: 'pointer', fontSize: 10, fontWeight: 700, fontFamily: "'JetBrains Mono',monospace", letterSpacing: 0.5,
 };

@@ -20,7 +20,7 @@ function Dashboard() {
   const sf = useSFView();
 
   return (
-    <div id="dash" style={{ minHeight: '100vh', background: '#0a0e17', padding: '16px 20px 32px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+    <div id="dash" style={{ minHeight: '100vh', background: '#eef1f6', padding: '16px 20px 32px', display: 'flex', flexDirection: 'column', gap: 14 }}>
       <Header />
 
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
@@ -48,7 +48,7 @@ function Dashboard() {
         </div>
       </div>
 
-      <footer className="no-print" style={{ textAlign: 'center', padding: '10px 0 4px', fontSize: 10, color: '#3a4a60' }}>
+      <footer className="no-print" style={{ textAlign: 'center', padding: '10px 0 4px', fontSize: 10, color: '#9aa7b8' }}>
         Dashboard Acopio y Secado v2.1 — Diseñado por Héctor Garrido Pérez
       </footer>
 

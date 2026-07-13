@@ -30,18 +30,18 @@ export default function PileView({ piles }) {
         const gradId = `pile-grad-${p.sector}`;
         const gradId2 = `pile-grad2-${p.sector}`;
         const clipId = `pile-clip-${p.sector}`;
-        const base = p.color || '#3a4a60';
+        const base = p.color || '#9aa7b8';
         const colorFrom = shade(base, -0.4);
         const colorTo = shade(base, 0.3);
         const base2 = p.colorSecondary;
         const colorFrom2 = base2 ? shade(base2, -0.4) : null;
         const colorTo2 = base2 ? shade(base2, 0.3) : null;
         const path = moundPath(W / 2, baseY, topY, halfWidth);
-        const feederColor = empty ? '#33415a' : base;
+        const feederColor = empty ? '#8493a8' : base;
 
         return (
           <div key={p.sector} style={{ flex: 'none', width: W, textAlign: 'center' }}>
-            <div className="font-mono-scada" style={{ fontSize: 10, fontWeight: 700, color: '#00e5ff', marginBottom: 2 }}>{p.sector}</div>
+            <div className="font-mono-scada" style={{ fontSize: 10, fontWeight: 700, color: '#1a73e8', marginBottom: 2 }}>{p.sector}</div>
             <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H}>
               <defs>
                 <linearGradient id={gradId} x1="0" y1="1" x2="0" y2="0">
@@ -60,12 +60,12 @@ export default function PileView({ piles }) {
                   </>
                 )}
               </defs>
-              <line x1="4" y1={baseY} x2={W - 4} y2={baseY} stroke="#1a2435" strokeWidth="2" />
+              <line x1="4" y1={baseY} x2={W - 4} y2={baseY} stroke="#e2e7ef" strokeWidth="2" />
               {!empty && (
                 <path
                   d={path}
                   fill={`url(#${gradId})`}
-                  stroke={p.isBad ? '#ff1744' : 'none'}
+                  stroke={p.isBad ? '#dc2626' : 'none'}
                   strokeWidth={p.isBad ? 2 : 0}
                   strokeDasharray={p.isBad ? '4,3' : 'none'}
                 />
@@ -75,13 +75,13 @@ export default function PileView({ piles }) {
               )}
               {p.dayLabel != null && !empty && (
                 <g>
-                  <rect x={W / 2 - 13} y={topY - 17} width="26" height="14" rx="3" fill="#0a0e17" stroke={base} strokeWidth="1" />
-                  <text x={W / 2} y={topY - 7} textAnchor="middle" className="font-mono-scada" fontSize="9" fontWeight="700" fill="#e0e6f0">{p.dayLabel}</text>
+                  <rect x={W / 2 - 13} y={topY - 17} width="26" height="14" rx="3" fill="#eef1f6" stroke={base} strokeWidth="1" />
+                  <text x={W / 2} y={topY - 7} textAnchor="middle" className="font-mono-scada" fontSize="9" fontWeight="700" fill="#182a44">{p.dayLabel}</text>
                 </g>
               )}
 
               {/* schematic reclaim feeder + conveyor line */}
-              <line x1="0" y1={rollerY} x2={W} y2={rollerY} stroke="#1a2435" strokeWidth="3" />
+              <line x1="0" y1={rollerY} x2={W} y2={rollerY} stroke="#e2e7ef" strokeWidth="3" />
               <FeederIcon x={W / 2} y={baseY + 5} size={20} color={feederColor} running={!empty} />
               {!empty && base2 && (
                 <g clipPath={`url(#${clipId})`}>
@@ -89,7 +89,7 @@ export default function PileView({ piles }) {
                 </g>
               )}
             </svg>
-            <div className="font-mono-scada" style={{ fontSize: 8.5, fontWeight: 700, color: empty ? '#4a5a74' : (p.color || '#3a4a60'), marginTop: 2, whiteSpace: 'nowrap' }}>{p.stateLabel}</div>
+            <div className="font-mono-scada" style={{ fontSize: 8.5, fontWeight: 700, color: empty ? '#7a8aa0' : (p.color || '#9aa7b8'), marginTop: 2, whiteSpace: 'nowrap' }}>{p.stateLabel}</div>
           </div>
         );
       })}

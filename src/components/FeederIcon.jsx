@@ -5,7 +5,7 @@ export function feederRollerY(y, size) {
   return y + size * 0.56 + size * 0.14;
 }
 
-export default function FeederIcon({ x = 0, y = 0, size = 24, color = '#3a4a60', running = false }) {
+export default function FeederIcon({ x = 0, y = 0, size = 24, color = '#9aa7b8', running = false }) {
   const topW = size, botW = size * 0.32;
   const bodyH = size * 0.56;
   const rollerGap = size * 0.14;

@@ -5,18 +5,18 @@
 @tailwind utilities;
 
 :root {
-  --bg: #0a0e17;
-  --panel: #0f1520;
-  --panel-header: #131b2a;
-  --border: #1a2435;
-  --run: #00e676;
-  --warn: #ffab00;
-  --alarm: #ff1744;
-  --info: #00e5ff;
-  --accent: #448aff;
-  --txt: #e0e6f0;
-  --txt-dim: #6b7a94;
-  --txt-muted: #3a4a60;
+  --bg: #eef1f6;
+  --panel: #ffffff;
+  --panel-header: #f6f8fb;
+  --border: #e2e7ef;
+  --run: #1f9d55;
+  --warn: #ef9b3a;
+  --alarm: #dc2626;
+  --info: #1a73e8;
+  --accent: #3f77e8;
+  --txt: #182a44;
+  --txt-dim: #54637a;
+  --txt-muted: #9aa7b8;
 }
 
 * {
@@ -61,16 +61,16 @@ body {
 }
 
 .glow-run {
-  box-shadow: 0 0 8px #00e67644, 0 0 2px #00e67688;
+  box-shadow: 0 0 8px #1f9d5544, 0 0 2px #1f9d5588;
 }
 .glow-warn {
-  box-shadow: 0 0 8px #ffab0044, 0 0 2px #ffab0088;
+  box-shadow: 0 0 8px #ef9b3a44, 0 0 2px #ef9b3a88;
 }
 .glow-alarm {
-  box-shadow: 0 0 8px #ff174444, 0 0 2px #ff174488;
+  box-shadow: 0 0 8px #dc262644, 0 0 2px #dc262688;
 }
 .glow-info {
-  box-shadow: 0 0 8px #00e5ff44, 0 0 2px #00e5ff88;
+  box-shadow: 0 0 8px #1a73e844, 0 0 2px #1a73e888;
 }
 
 .kpi-value-glow {
@@ -92,7 +92,7 @@ body {
 }
 
 .alarm-row-bg {
-  background: #ff174433;
+  background: #dc262633;
 }
 
 /* scrollbars */

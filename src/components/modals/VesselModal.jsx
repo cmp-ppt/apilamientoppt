@@ -5,10 +5,10 @@ import { cancelBtn, okBtn, deleteBtn } from './ValueModal';
 import { fmt } from '../../utils/format';
 
 const TYPE_BTNS = [
-  ['hierro_apf', 'Emb. hierro APF', '#448aff'],
-  ['hierro_asf', 'Emb. hierro ASF', '#448aff'],
-  ['cobre', 'Emb. cobre', '#ffab00'],
-  ['cerrado', 'Puerto cerrado', '#6b7a94'],
+  ['hierro_apf', 'Emb. hierro APF', '#3f77e8'],
+  ['hierro_asf', 'Emb. hierro ASF', '#3f77e8'],
+  ['cobre', 'Emb. cobre', '#ef9b3a'],
+  ['cerrado', 'Puerto cerrado', '#54637a'],
 ];
 
 export default function VesselModal({ modal }) {
@@ -33,7 +33,7 @@ export default function VesselModal({ modal }) {
 
   return (
     <ModalShell onClose={close}>
-      <h3 style={{ fontSize: 15, fontWeight: 700, color: '#e0e6f0', margin: 0 }}>{modal.title}</h3>
+      <h3 style={{ fontSize: 15, fontWeight: 700, color: '#182a44', margin: 0 }}>{modal.title}</h3>
       <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 13 }}>
         <Field label="NOMBRE / EVENTO">
           <input autoFocus type="text" value={form.name} onKeyDown={onKey} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="Ej. MV JUDD" style={fullInput} />
@@ -61,9 +61,9 @@ export default function VesselModal({ modal }) {
                 onClick={() => pickType(tk)}
                 style={{
                   flex: '1 1 calc(50% - 3px)', textAlign: 'center',
-                  border: `1px solid ${modalVesselType === tk ? color : '#1a2435'}`,
-                  background: modalVesselType === tk ? color : '#0a0e17',
-                  color: modalVesselType === tk ? '#0a0e17' : '#6b7a94',
+                  border: `1px solid ${modalVesselType === tk ? color : '#e2e7ef'}`,
+                  background: modalVesselType === tk ? color : '#eef1f6',
+                  color: modalVesselType === tk ? '#eef1f6' : '#54637a',
                   borderRadius: 4, padding: '8px 6px', cursor: 'pointer', fontSize: 10.5, fontWeight: 700, fontFamily: "'JetBrains Mono',monospace",
                 }}
               >
@@ -93,6 +93,6 @@ function Field({ label, children }) {
 }
 
 const fullInput = {
-  width: '100%', boxSizing: 'border-box', border: '1.5px solid #1a2435', background: '#0a0e17', borderRadius: 4,
-  padding: '9px 11px', fontSize: 13, color: '#e0e6f0', outline: 'none', fontFamily: "'JetBrains Mono',monospace",
+  width: '100%', boxSizing: 'border-box', border: '1.5px solid #e2e7ef', background: '#eef1f6', borderRadius: 4,
+  padding: '9px 11px', fontSize: 13, color: '#182a44', outline: 'none', fontFamily: "'JetBrains Mono',monospace",
 };

@@ -82,16 +82,16 @@ export const DIAS_CRITICOS = 4;
 
 // ---- SCADA color tokens (dark industrial theme) ----
 export const SCADA = {
-  bg: '#0a0e17',
-  panel: '#0f1520',
-  panelHeader: '#131b2a',
-  border: '#1a2435',
-  run: '#00e676',
-  warn: '#ffab00',
-  alarm: '#ff1744',
-  info: '#00e5ff',
-  accent: '#448aff',
-  txt: '#e0e6f0',
-  txtDim: '#6b7a94',
-  txtMuted: '#3a4a60',
+  bg: '#eef1f6',
+  panel: '#ffffff',
+  panelHeader: '#f6f8fb',
+  border: '#e2e7ef',
+  run: '#1f9d55',
+  warn: '#ef9b3a',
+  alarm: '#dc2626',
+  info: '#1a73e8',
+  accent: '#3f77e8',
+  txt: '#182a44',
+  txtDim: '#54637a',
+  txtMuted: '#9aa7b8',
 };

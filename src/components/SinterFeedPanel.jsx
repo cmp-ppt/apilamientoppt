@@ -6,9 +6,9 @@ import DayHeaderRow from './DayHeaderRow';
 import PileView from './PileView';
 import SectorTag from './SectorTag';
 
-const OCC_COLOR = { libre: '#131b2a', ema: '#7c5cff', bella: '#ffab00' };
+const OCC_COLOR = { libre: '#ffffff', ema: '#7c3aed', bella: '#ef9b3a' };
 const OCC_LABEL_UP = { libre: 'LIBRE', ema: 'EMA', bella: 'BELLA ESTER', mixto: 'MIXTO' };
-const MIXTO_BG = 'repeating-linear-gradient(45deg,#7c5cff,#7c5cff 4px,#ffab00 4px,#ffab00 8px)';
+const MIXTO_BG = 'repeating-linear-gradient(45deg,#7c3aed,#7c3aed 4px,#ef9b3a 4px,#ef9b3a 8px)';
 const OCC_LABEL = { libre: 'Libre', ema: 'Acopio Ema', bella: 'Acopio Bella Ester', mixto: 'Acopio mixto' };
 
 const PARAM_ABBR = { fet: 'Fe', sio2: 'Si', al2o3: 'Al', p: 'P', s: 'S', tio2: 'Ti' };
@@ -61,19 +61,19 @@ export default function SinterFeedPanel() {
       <div className="scada-panel" style={{ padding: '12px 14px' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 10, flexWrap: 'wrap' }}>
           <div>
-            <div className="scada-label" style={{ color: '#e0e6f0', fontSize: 11 }}>OCUPACIÓN POR FEEDER — SINTER FEED</div>
-            <div style={{ fontSize: 10.5, color: '#6b7a94', marginTop: 2 }}>Selecciona un día y haz clic en la celda para cambiar el proveedor</div>
+            <div className="scada-label" style={{ color: '#182a44', fontSize: 11 }}>OCUPACIÓN POR FEEDER — SINTER FEED</div>
+            <div style={{ fontSize: 10.5, color: '#54637a', marginTop: 2 }}>Selecciona un día y haz clic en la celda para cambiar el proveedor</div>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
             <button className="no-print" onClick={requestReset} style={smallBtn}>BORRAR DÍA {String(refDay).padStart(2, '0')}</button>
-            <button className="no-print" onClick={() => fileRef.current?.click()} style={{ ...smallBtn, background: '#448aff', color: '#0a0e17', borderColor: '#448aff' }}>IMPORTAR EXCEL</button>
+            <button className="no-print" onClick={() => fileRef.current?.click()} style={{ ...smallBtn, background: '#3f77e8', color: '#eef1f6', borderColor: '#3f77e8' }}>IMPORTAR EXCEL</button>
             <input ref={fileRef} type="file" accept=".xlsx" onChange={onImport} style={{ display: 'none' }} />
           </div>
         </div>
         <div style={{ display: 'flex', gap: 14, marginBottom: 10, flexWrap: 'wrap' }}>
           {Object.entries(OCC_LABEL).map(([k, label]) => (
-            <span key={k} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, color: '#6b7a94' }}>
-              <span style={{ width: 13, height: 13, borderRadius: 3, background: k === 'mixto' ? MIXTO_BG : OCC_COLOR[k], border: k === 'libre' ? '1px solid #3a4a60' : 'none' }} />
+            <span key={k} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, color: '#54637a' }}>
+              <span style={{ width: 13, height: 13, borderRadius: 3, background: k === 'mixto' ? MIXTO_BG : OCC_COLOR[k], border: k === 'libre' ? '1px solid #cdd6e2' : 'none' }} />
               {label}
             </span>
           ))}
@@ -87,7 +87,7 @@ export default function SinterFeedPanel() {
             <DayHeaderRow dayHeaders={sfDayHeaders} onSelectDay={setRefDay} colWidth={58} labelWidth={62} />
             {sfOccRows.map((row) => (
               <div key={row.sector} style={{ display: 'flex', alignItems: 'stretch' }}>
-                <div className="font-mono-scada matrix-sticky-col" style={{ width: 62, flex: 'none', display: 'flex', alignItems: 'center', gap: 4, padding: '0 6px', borderRight: '1px solid #1a2435', borderBottom: '1px solid #1a2435', fontWeight: 700, fontSize: 10.5, color: '#00e5ff' }}>
+                <div className="font-mono-scada matrix-sticky-col" style={{ width: 62, flex: 'none', display: 'flex', alignItems: 'center', gap: 4, padding: '0 6px', borderRight: '1px solid #e2e7ef', borderBottom: '1px solid #e2e7ef', fontWeight: 700, fontSize: 10.5, color: '#1a73e8' }}>
                   <SectorTag sector={row.sector} />
                 </div>
                 {row.cells.map((c) => (
@@ -100,7 +100,7 @@ export default function SinterFeedPanel() {
                       width: 58, height: 30,
                       background: c.state === 'mixto' ? MIXTO_BG : OCC_COLOR[c.state],
                       cursor: 'pointer',
-                      boxShadow: c.isRef ? 'inset 0 0 0 2px #00e5ff' : 'none',
+                      boxShadow: c.isRef ? 'inset 0 0 0 2px #1a73e8' : 'none',
                       opacity: c.isRef ? 1 : 0.85,
                     }}
                   />
@@ -113,24 +113,24 @@ export default function SinterFeedPanel() {
 
       {sfSections.map((sec) => (
         <div key={sec.key} className="scada-panel" style={{ padding: '12px 14px' }}>
-          <div className="scada-label" style={{ color: '#e0e6f0', fontSize: 11, marginBottom: 10 }}>{sec.title.toUpperCase()}</div>
+          <div className="scada-label" style={{ color: '#182a44', fontSize: 11, marginBottom: 10 }}>{sec.title.toUpperCase()}</div>
           <div style={{ display: 'flex', gap: 14, marginBottom: 10, flexWrap: 'wrap', alignItems: 'center' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,18px)', gridTemplateRows: 'repeat(2,18px)', gap: 1, background: '#00e5ff', padding: 2, borderRadius: 4 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,18px)', gridTemplateRows: 'repeat(2,18px)', gap: 1, background: '#1a73e8', padding: 2, borderRadius: 4 }}>
               {['Fe', 'Si', 'Al', 'P', 'S', 'Ti'].map((el) => (
-                <span key={el} style={{ background: '#131b2a', color: '#00e5ff', fontSize: 7, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'JetBrains Mono',monospace" }}>{el}</span>
+                <span key={el} style={{ background: '#f6f8fb', color: '#1a73e8', fontSize: 7, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'JetBrains Mono',monospace" }}>{el}</span>
               ))}
             </div>
-            <span style={{ fontSize: 10, color: '#6b7a94' }}>posición de cada ley dentro de la casilla</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, color: '#6b7a94' }}><span style={{ width: 12, height: 12, borderRadius: 3, background: '#00e676' }} />Cumple especificación</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, color: '#6b7a94' }}><span style={{ width: 12, height: 12, borderRadius: 3, background: '#ff1744' }} />Fuera de especificación</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, color: '#6b7a94' }}><span style={{ width: 12, height: 12, borderRadius: 3, background: '#131b2a', border: '1px solid #3a4a60' }} />Sin registro</span>
+            <span style={{ fontSize: 10, color: '#54637a' }}>posición de cada ley dentro de la casilla</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, color: '#54637a' }}><span style={{ width: 12, height: 12, borderRadius: 3, background: '#1f9d55' }} />Cumple especificación</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, color: '#54637a' }}><span style={{ width: 12, height: 12, borderRadius: 3, background: '#dc2626' }} />Fuera de especificación</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, color: '#54637a' }}><span style={{ width: 12, height: 12, borderRadius: 3, background: '#ffffff', border: '1px solid #cdd6e2' }} />Sin registro</span>
           </div>
           <div className="matrix-scroll scada-scroll" style={{ overflowX: 'auto', paddingBottom: 4 }}>
             <div style={{ display: 'inline-block', minWidth: '100%' }}>
               <DayHeaderRow dayHeaders={sfDayHeaders} onSelectDay={setRefDay} colWidth={58} labelWidth={62} />
               {sec.rows.map((row) => (
                 <div key={row.sector} style={{ display: 'flex', alignItems: 'stretch' }}>
-                  <div className="font-mono-scada matrix-sticky-col" style={{ width: 62, flex: 'none', display: 'flex', alignItems: 'center', gap: 4, padding: '0 6px', borderRight: '1px solid #1a2435', borderBottom: '1px solid #1a2435', fontWeight: 700, fontSize: 10.5, color: '#00e5ff' }}>
+                  <div className="font-mono-scada matrix-sticky-col" style={{ width: 62, flex: 'none', display: 'flex', alignItems: 'center', gap: 4, padding: '0 6px', borderRight: '1px solid #e2e7ef', borderBottom: '1px solid #e2e7ef', fontWeight: 700, fontSize: 10.5, color: '#1a73e8' }}>
                     <SectorTag sector={row.sector} />
                   </div>
                   {row.cells.map((c) => (
@@ -139,9 +139,9 @@ export default function SinterFeedPanel() {
                       className="matrix-cell"
                       style={{
                         width: 58, height: 30, boxSizing: 'border-box',
-                        borderRight: '1px solid #1a2435', borderBottom: '1px solid #1a2435',
+                        borderRight: '1px solid #e2e7ef', borderBottom: '1px solid #e2e7ef',
                         display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gridTemplateRows: 'repeat(2,1fr)', gap: 1, padding: 2,
-                        boxShadow: c.isRef ? 'inset 0 0 0 2px #00e5ff' : 'none',
+                        boxShadow: c.isRef ? 'inset 0 0 0 2px #1a73e8' : 'none',
                       }}
                     >
                       {c.minis.map((mc) => (
@@ -151,8 +151,8 @@ export default function SinterFeedPanel() {
                           onClick={c.enabled ? () => openSinter6(sec.key, row.sector, c.day - 1) : undefined}
                           className="font-mono-scada"
                           style={{
-                            background: mc.measured ? (mc.pass ? '#00e676' : '#ff1744') : c.enabled ? '#131b2a' : '#0a0e17',
-                            color: mc.measured ? (mc.pass ? '#04160c' : '#fff') : '#3a4a60',
+                            background: mc.measured ? (mc.pass ? '#1f9d55' : '#dc2626') : c.enabled ? '#ffffff' : '#eef1f6',
+                            color: mc.measured ? (mc.pass ? '#04160c' : '#fff') : '#9aa7b8',
                             borderRadius: 2, cursor: c.enabled ? 'pointer' : 'default',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             fontSize: 6.5, fontWeight: 700, lineHeight: 1, overflow: 'hidden',
@@ -174,6 +174,6 @@ export default function SinterFeedPanel() {
 }
 
 const smallBtn = {
-  border: '1px solid #1a2435', background: '#131b2a', color: '#6b7a94', borderRadius: 4, padding: '5px 10px',
+  border: '1px solid #e2e7ef', background: '#f6f8fb', color: '#54637a', borderRadius: 4, padding: '5px 10px',
   cursor: 'pointer', fontSize: 10, fontWeight: 700, fontFamily: "'JetBrains Mono',monospace", letterSpacing: 0.5,
 };

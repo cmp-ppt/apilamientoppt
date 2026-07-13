@@ -27,8 +27,8 @@ export default function TrendPanel() {
     <div className="scada-panel" style={{ padding: '12px 14px' }}>
       <div className="scada-label" style={{ marginBottom: 10 }}>TENDENCIA DEL MES</div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-        <TrendChart title="HUMEDAD PROMEDIO (%)" data={humSeries} color="#00e5ff" setpoint={TML} unit="%" />
-        <TrendChart title="LEY DE FE PROMEDIO (%)" data={feSeries} color="#00e676" unit="%" />
+        <TrendChart title="HUMEDAD PROMEDIO (%)" data={humSeries} color="#1a73e8" setpoint={TML} unit="%" />
+        <TrendChart title="LEY DE FE PROMEDIO (%)" data={feSeries} color="#1f9d55" unit="%" />
       </div>
     </div>
   );
