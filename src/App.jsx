@@ -10,6 +10,7 @@ import TrendPanel from './components/TrendPanel';
 import AlarmPanel from './components/AlarmPanel';
 import VesselPanel from './components/VesselPanel';
 import ShiftLogPanel from './components/ShiftLogPanel';
+import PrintShiftSummary from './components/PrintShiftSummary';
 import ModalRoot from './components/modals/ModalRoot';
 
 function Dashboard() {
@@ -45,6 +46,8 @@ function Dashboard() {
           <VesselPanel />
         </div>
       </div>
+
+      {!isSF && <PrintShiftSummary />}
 
       <footer className="no-print" style={{ textAlign: 'center', padding: '10px 0 4px', fontSize: 10, color: '#9aa7b8' }}>
         Dashboard Acopio y Secado v2.1 — Diseñado por Héctor Garrido Pérez

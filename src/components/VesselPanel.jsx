@@ -21,7 +21,7 @@ export default function VesselPanel() {
   };
 
   return (
-    <div className="scada-panel" style={{ padding: '12px 14px' }}>
+    <div className="scada-panel no-print" style={{ padding: '12px 14px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
         <div className="scada-label" style={{ color: '#182a44', fontSize: 11 }}>CALENDARIO DE MOTONAVES</div>
         <button className="no-print" onClick={openAdd} style={addBtn}>+ AGREGAR</button>

@@ -7,7 +7,7 @@ export default function ShiftLogPanel() {
   const rec = log?.[month]?.[refDay]?.[shift] || {};
 
   return (
-    <div className="scada-panel" style={{ padding: '12px 14px' }}>
+    <div className="scada-panel no-print" style={{ padding: '12px 14px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
           <div className="scada-label" style={{ color: '#182a44', fontSize: 11 }}>REGISTRO DE TURNO</div>
