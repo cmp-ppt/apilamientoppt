@@ -4,8 +4,6 @@ import { useCanchaView } from '../hooks/useDerived';
 import DayHeaderRow from './DayHeaderRow';
 import PileView from './PileView';
 import SectorTag from './SectorTag';
-import { lerpColor } from '../utils/color';
-import { DIAS_RECOMENDADOS } from '../constants';
 
 const STATE_BG = { fresca: '#448aff', secado: '#00e676', libre: '#131b2a' };
 const STATE_LABEL = { fresca: 'FRESCA', secado: 'SECADO', libre: 'LIBRE' };
@@ -18,9 +16,7 @@ export default function EstadoMatrix() {
 
   const piles = rowsEstado.map((row) => {
     const cell = row.cells[refIdx];
-    const color = cell.state === 'secado'
-      ? lerpColor('#448aff', '#00e676', Math.min(1, (cell.dias || 0) / DIAS_RECOMENDADOS))
-      : STATE_BG[cell.state];
+    const color = STATE_BG[cell.state];
     return {
       sector: row.sector,
       tons: tons[row.sector],
@@ -74,11 +70,7 @@ export default function EstadoMatrix() {
                 <SectorTag sector={row.sector} />
               </div>
               {row.cells.map((c) => {
-                const bg = c.state === 'fresca' && c.isBad
-                  ? CONTAM_BG
-                  : c.state === 'secado'
-                    ? lerpColor('#448aff', '#00e676', Math.min(1, (c.dias || 0) / DIAS_RECOMENDADOS))
-                    : STATE_BG[c.state];
+                const bg = c.state === 'fresca' && c.isBad ? CONTAM_BG : STATE_BG[c.state];
                 return (
                   <div
                     key={c.day}
