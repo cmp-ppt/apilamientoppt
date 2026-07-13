@@ -123,6 +123,11 @@ export default function SinterFeedPanel() {
             <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, color: '#54637a' }}><span style={{ width: 12, height: 12, borderRadius: 3, background: '#dc2626' }} />Fuera de especificación</span>
             <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, color: '#54637a' }}><span style={{ width: 12, height: 12, borderRadius: 3, background: '#ffffff', border: '1px solid #cdd6e2' }} />Sin registro</span>
           </div>
+          <div className="font-mono-scada" style={{ display: 'flex', gap: 14, marginBottom: 10, flexWrap: 'wrap', fontSize: 9.5, color: '#54637a' }}>
+            {SF_PARAMS.map((p) => (
+              <span key={p.key}><strong style={{ color: '#1a73e8' }}>{p.label}</strong> {p.hint}</span>
+            ))}
+          </div>
           <div className="matrix-scroll scada-scroll" style={{ overflowX: 'auto', paddingBottom: 4 }}>
             <div style={{ display: 'inline-block', minWidth: '100%' }}>
               <DayHeaderRow dayHeaders={sfDayHeaders} onSelectDay={setRefDay} colWidth={90} labelWidth={62} />
