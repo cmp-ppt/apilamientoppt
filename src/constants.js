@@ -27,7 +27,7 @@ export const TONS = {
   SF: { F3A: 10000, F3B: 10000, F2A: 10000, F2B: 10000, F1A: 10000, F1B: 10000 },
 };
 
-export const TML = 8.4;
+export const TML = 8.6;
 
 export const SEED = {
   CNN: {

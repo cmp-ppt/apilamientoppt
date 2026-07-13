@@ -74,6 +74,6 @@ export function feColor(v) {
 
 export function humCellColor(v) {
   if (v > 9) return { bg: '#dc2626', fg: '#ffffff' };
-  if (v > 8.4) return { bg: '#ef9b3a', fg: '#2a1c00' };
+  if (v > TML) return { bg: '#ef9b3a', fg: '#2a1c00' };
   return { bg: '#1f9d55', fg: '#04160c' };
 }

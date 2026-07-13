@@ -1,11 +1,13 @@
 import { useAcopio } from '../store/AcopioContext';
 import { useCanchaView } from '../hooks/useDerived';
+import { TML } from '../constants';
 import DayHeaderRow from './DayHeaderRow';
 import SectorTag from './SectorTag';
 
+const tmlStr = TML.toString().replace('.', ',');
 const HUM_LEGEND = [
-  { color: '#1f9d55', label: '< 8,4% · bajo TML' },
-  { color: '#ef9b3a', label: '8,41 – 9% · límite' },
+  { color: '#1f9d55', label: `< ${tmlStr}% · bajo TML` },
+  { color: '#ef9b3a', label: `${(TML + 0.01).toFixed(2).replace('.', ',')} – 9% · límite` },
   { color: '#dc2626', label: '> 9% · sobre TML' },
 ];
 const FE_LEGEND = [
@@ -22,7 +24,7 @@ export default function ValueMatrix({ mode }) {
   const rows = isFe ? rowsFe : rowsHum;
   const legend = isFe ? FE_LEGEND : HUM_LEGEND;
   const title = isFe ? 'LEY DE FE POR FEEDER' : 'HUMEDAD POR FEEDER';
-  const subtitle = isFe ? 'Clic en un feeder en acopio para registrar la Ley de Fe (%)' : 'Clic en un feeder en acopio para registrar la humedad medida (%) · TML 8,4%';
+  const subtitle = isFe ? 'Clic en un feeder en acopio para registrar la Ley de Fe (%)' : `Clic en un feeder en acopio para registrar la humedad medida (%) · TML ${tmlStr}%`;
 
   const openEdit = (sector, idx) => {
     const cell = rows.find((r) => r.sector === sector).cells[idx];
