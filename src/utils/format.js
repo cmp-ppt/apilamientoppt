@@ -41,8 +41,7 @@ export function fmtSF(x) {
 
 export function fmtSFShort(x) {
   if (x == null || isNaN(x)) return '';
-  const r = Math.round(x * 10) / 10;
-  return String(r).replace('.', ',');
+  return x.toFixed(2).replace('.', ',');
 }
 
 export function specPass(paramKey, value) {

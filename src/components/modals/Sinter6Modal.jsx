@@ -4,12 +4,13 @@ import ModalShell from './ModalShell';
 import { cancelBtn, okBtn } from './ValueModal';
 
 export default function Sinter6Modal({ modal }) {
-  const { setModal, setSinterAt } = useAcopio();
+  const { setModal, setSinterMulti } = useAcopio();
   const [values, setValues] = useState(() => Object.fromEntries(modal.fields.map((f) => [f.key, f.initial || ''])));
 
   const close = () => setModal(null);
   const save = () => {
-    for (const f of modal.fields) setSinterAt(modal.provider, f.key, modal.sector, modal.idx, (values[f.key] || '').trim());
+    const entries = modal.fields.map((f) => ({ paramKey: f.key, raw: (values[f.key] || '').trim() }));
+    setSinterMulti(modal.provider, modal.sector, modal.idx, entries);
     close();
   };
   const onKey = (e) => { if (e.key === 'Enter') { e.preventDefault(); save(); } if (e.key === 'Escape') close(); };

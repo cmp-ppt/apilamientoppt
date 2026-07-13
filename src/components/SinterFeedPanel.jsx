@@ -127,7 +127,7 @@ export default function SinterFeedPanel() {
           </div>
           <div className="matrix-scroll scada-scroll" style={{ overflowX: 'auto', paddingBottom: 4 }}>
             <div style={{ display: 'inline-block', minWidth: '100%' }}>
-              <DayHeaderRow dayHeaders={sfDayHeaders} onSelectDay={setRefDay} colWidth={58} labelWidth={62} />
+              <DayHeaderRow dayHeaders={sfDayHeaders} onSelectDay={setRefDay} colWidth={90} labelWidth={62} />
               {sec.rows.map((row) => (
                 <div key={row.sector} style={{ display: 'flex', alignItems: 'stretch' }}>
                   <div className="font-mono-scada matrix-sticky-col" style={{ width: 62, flex: 'none', display: 'flex', alignItems: 'center', gap: 4, padding: '0 6px', borderRight: '1px solid #e2e7ef', borderBottom: '1px solid #e2e7ef', fontWeight: 700, fontSize: 10.5, color: '#1a73e8' }}>
@@ -138,9 +138,9 @@ export default function SinterFeedPanel() {
                       key={c.day}
                       className="matrix-cell"
                       style={{
-                        width: 58, height: 30, boxSizing: 'border-box',
+                        width: 90, height: 34, boxSizing: 'border-box',
                         borderRight: '1px solid #e2e7ef', borderBottom: '1px solid #e2e7ef',
-                        display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gridTemplateRows: 'repeat(2,1fr)', gap: 1, padding: 2,
+                        display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gridTemplateRows: 'repeat(2,1fr)', gap: 2, padding: 3,
                         boxShadow: c.isRef ? 'inset 0 0 0 2px #1a73e8' : 'none',
                       }}
                     >
@@ -155,7 +155,7 @@ export default function SinterFeedPanel() {
                             color: mc.measured ? (mc.pass ? '#04160c' : '#fff') : '#9aa7b8',
                             borderRadius: 2, cursor: c.enabled ? 'pointer' : 'default',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontSize: 6.5, fontWeight: 700, lineHeight: 1, overflow: 'hidden',
+                            fontSize: 8, fontWeight: 700, lineHeight: 1, overflow: 'hidden', whiteSpace: 'nowrap',
                           }}
                         >
                           {mc.measured ? mc.text : PARAM_ABBR[mc.key]}

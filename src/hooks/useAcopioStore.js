@@ -247,6 +247,22 @@ export function useAcopioStore() {
     saveSinter(next);
   }, [sinter, month, shift, saveSinter]);
 
+  // Aplica varios parametros quimicos (Fe/Si/Al/P/S/Ti) de una sola vez, para no
+  // perder campos por escrituras concurrentes basadas en un estado desactualizado.
+  const setSinterMulti = useCallback((provider, sector, idx, entries) => {
+    const next = JSON.parse(JSON.stringify(sinter || {}));
+    next[month] = next[month] || {}; next[month][shift] = next[month][shift] || {};
+    next[month][shift][provider] = next[month][shift][provider] || {};
+    for (const { paramKey, raw } of entries) {
+      next[month][shift][provider][paramKey] = next[month][shift][provider][paramKey] || {};
+      next[month][shift][provider][paramKey][sector] = next[month][shift][provider][paramKey][sector] || {};
+      const v = String(raw).replace(',', '.');
+      if (raw === '' || raw == null || isNaN(Number(v))) delete next[month][shift][provider][paramKey][sector][idx];
+      else next[month][shift][provider][paramKey][sector][idx] = Number(v);
+    }
+    saveSinter(next);
+  }, [sinter, month, shift, saveSinter]);
+
   const setLog = useCallback((field, value) => {
     const next = JSON.parse(JSON.stringify(log || {}));
     next[month] = next[month] || {}; next[month][refDay] = next[month][refDay] || {};
@@ -433,7 +449,7 @@ export function useAcopioStore() {
     // derived
     vesselsFor, eventForDay, effHum, ensureMonth: (d, mo) => ensureMonth(d, mo), ensureSFMonth: (o, mo) => ensureSFMonth(o, mo),
     // actions
-    shiftMonth, cycle, cycleSF, setHumAt, setFeAt, setSinterAt, setLog,
+    shiftMonth, cycle, cycleSF, setHumAt, setFeAt, setSinterAt, setSinterMulti, setLog,
     saveVesselForm, deleteVessel, doReset, requestReset, importExcel, importExcelSinter,
   };
 }
