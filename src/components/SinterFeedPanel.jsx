@@ -11,8 +11,6 @@ const OCC_LABEL_UP = { libre: 'LIBRE', ema: 'EMA', bella: 'BELLA ESTER', mixto: 
 const MIXTO_BG = 'repeating-linear-gradient(45deg,#7c3aed,#7c3aed 4px,#ef9b3a 4px,#ef9b3a 8px)';
 const OCC_LABEL = { libre: 'Libre', ema: 'Acopio Ema', bella: 'Acopio Bella Ester', mixto: 'Acopio mixto' };
 
-const PARAM_ABBR = { fet: 'Fe', sio2: 'Si', al2o3: 'Al', p: 'P', s: 'S', tio2: 'Ti' };
-
 export default function SinterFeedPanel() {
   const { cycleSF, setRefDay, refDay, requestReset, setModal, importExcelSinter } = useAcopio();
   const { dim, sfDayHeaders, sfOccRows, sfSections } = useSFView();
@@ -154,11 +152,11 @@ export default function SinterFeedPanel() {
                             background: mc.measured ? (mc.pass ? '#1f9d55' : '#dc2626') : c.enabled ? '#ffffff' : '#eef1f6',
                             color: mc.measured ? (mc.pass ? '#04160c' : '#fff') : '#9aa7b8',
                             borderRadius: 2, cursor: c.enabled ? 'pointer' : 'default',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', alignSelf: 'stretch',
                             fontSize: 8, fontWeight: 700, lineHeight: 1, overflow: 'hidden', whiteSpace: 'nowrap',
                           }}
                         >
-                          {mc.measured ? mc.text : PARAM_ABBR[mc.key]}
+                          {mc.measured ? mc.text : ''}
                         </div>
                       ))}
                     </div>
