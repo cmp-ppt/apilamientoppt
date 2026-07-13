@@ -198,6 +198,10 @@ input[type='number'] {
   .matrix-scroll {
     overflow: visible !important;
   }
+  .scada-panel {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
   @page {
     size: A3 landscape;
     margin: 8mm;
