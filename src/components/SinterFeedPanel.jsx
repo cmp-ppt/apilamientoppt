@@ -113,7 +113,7 @@ export default function SinterFeedPanel() {
         <div key={sec.key} className="scada-panel" style={{ padding: '12px 14px' }}>
           <div className="scada-label" style={{ color: '#182a44', fontSize: 11, marginBottom: 10 }}>{sec.title.toUpperCase()}</div>
           <div style={{ display: 'flex', gap: 14, marginBottom: 10, flexWrap: 'wrap', alignItems: 'center' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,18px)', gridTemplateRows: 'repeat(2,18px)', gap: 1, background: '#1a73e8', padding: 2, borderRadius: 4 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,18px)', gridTemplateRows: 'repeat(3,18px)', gap: 1, background: '#1a73e8', padding: 2, borderRadius: 4 }}>
               {['Fe', 'Si', 'Al', 'P', 'S', 'Ti'].map((el) => (
                 <span key={el} style={{ background: '#f6f8fb', color: '#1a73e8', fontSize: 7, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'JetBrains Mono',monospace" }}>{el}</span>
               ))}
@@ -130,7 +130,7 @@ export default function SinterFeedPanel() {
           </div>
           <div className="matrix-scroll scada-scroll" style={{ overflowX: 'auto', paddingBottom: 4 }}>
             <div style={{ display: 'inline-block', minWidth: '100%' }}>
-              <DayHeaderRow dayHeaders={sfDayHeaders} onSelectDay={setRefDay} colWidth={90} labelWidth={62} />
+              <DayHeaderRow dayHeaders={sfDayHeaders} onSelectDay={setRefDay} colWidth={64} labelWidth={62} />
               {sec.rows.map((row) => (
                 <div key={row.sector} style={{ display: 'flex', alignItems: 'stretch' }}>
                   <div className="font-mono-scada matrix-sticky-col" style={{ width: 62, flex: 'none', display: 'flex', alignItems: 'center', gap: 4, padding: '0 6px', borderRight: '1px solid #e2e7ef', borderBottom: '1px solid #e2e7ef', fontWeight: 700, fontSize: 10.5, color: '#1a73e8' }}>
@@ -141,9 +141,9 @@ export default function SinterFeedPanel() {
                       key={c.day}
                       className="matrix-cell"
                       style={{
-                        width: 90, height: 34, boxSizing: 'border-box',
+                        width: 64, height: 48, boxSizing: 'border-box',
                         borderRight: '1px solid #e2e7ef', borderBottom: '1px solid #e2e7ef',
-                        display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gridTemplateRows: 'repeat(2,1fr)', gap: 2, padding: 3,
+                        display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gridTemplateRows: 'repeat(3,1fr)', gap: 2, padding: 3,
                         boxShadow: c.isRef ? 'inset 0 0 0 2px #1a73e8' : 'none',
                       }}
                     >
