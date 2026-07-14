@@ -82,7 +82,7 @@ export default function SinterFeedPanel() {
 
         <div className="matrix-scroll scada-scroll" style={{ overflowX: 'auto', paddingBottom: 4 }}>
           <div style={{ display: 'inline-block', minWidth: '100%' }}>
-            <DayHeaderRow dayHeaders={sfDayHeaders} onSelectDay={setRefDay} colWidth={58} labelWidth={62} />
+            <DayHeaderRow dayHeaders={sfDayHeaders} onSelectDay={setRefDay} colWidth={64} labelWidth={62} />
             {sfOccRows.map((row) => (
               <div key={row.sector} style={{ display: 'flex', alignItems: 'stretch' }}>
                 <div className="font-mono-scada matrix-sticky-col" style={{ width: 62, flex: 'none', display: 'flex', alignItems: 'center', gap: 4, padding: '0 6px', borderRight: '1px solid #e2e7ef', borderBottom: '1px solid #e2e7ef', fontWeight: 700, fontSize: 10.5, color: '#1a73e8' }}>
@@ -95,7 +95,7 @@ export default function SinterFeedPanel() {
                     onClick={() => (c.isRef ? cycleSF(row.sector, c.day - 1) : setRefDay(c.day))}
                     className="matrix-cell"
                     style={{
-                      width: 58, height: 30,
+                      width: 64, height: 30,
                       background: c.state === 'mixto' ? MIXTO_BG : OCC_COLOR[c.state],
                       cursor: 'pointer',
                       boxShadow: c.isRef ? 'inset 0 0 0 2px #1a73e8' : 'none',
