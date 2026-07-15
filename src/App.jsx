@@ -3,6 +3,7 @@ import { useCanchaView, useSFView } from './hooks/useDerived';
 import Header from './components/Header';
 import TabBar from './components/TabBar';
 import KpiStrip from './components/KpiStrip';
+import GaugeRow from './components/GaugeRow';
 import EstadoMatrix from './components/EstadoMatrix';
 import ValueMatrix from './components/ValueMatrix';
 import SinterFeedPanel from './components/SinterFeedPanel';
@@ -27,6 +28,7 @@ function Dashboard() {
         <TabBar />
       </div>
 
+      {!isSF && <GaugeRow />}
       {!isSF && <KpiStrip kpis={cancha_.kpis} columns={8} />}
       {isSF && <KpiStrip kpis={sf.sfKpis} columns={6} />}
       {isSF && <KpiStrip kpis={sf.sfKpisMonth} columns={6} />}
