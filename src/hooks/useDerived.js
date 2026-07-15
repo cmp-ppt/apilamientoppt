@@ -170,10 +170,10 @@ export function useCanchaView(canchaOverride) {
     const kpis = [
       { label: 'Ocupación cancha', value: occ + '%', sub: (sectors.length - states.filter((x) => x === 'libre').length) + ' de ' + sectors.length + ' feeders', color: '#1a73e8', series: occSeries },
       { label: 'Feeders en secado', value: String(secIdx.length), sub: 'esperando embarque', color: '#1f9d55' },
-      { label: 'Humedad prom. día', value: avgHum != null ? fmtHum(avgHum) : '—', sub: humToday.length ? humToday.length + (humToday.length === 1 ? ' feeder medido' : ' feeders medidos') : 'sin registro', color: avgHum != null && avgHum > TML ? '#dc2626' : '#1a73e8' },
-      { label: 'Humedad prom. mes', value: avgHumMonth != null ? fmtHum(avgHumMonth) : '—', sub: humMaxDay ? 'hasta el día ' + String(humMaxDay).padStart(2, '0') : 'sin registro', color: avgHumMonth != null && avgHumMonth > TML ? '#dc2626' : '#1a73e8', series: humSeries },
-      { label: 'Ley Fe día', value: avgFe != null ? (Math.round(avgFe * 100) / 100).toFixed(2).replace('.', ',') + '%' : '—', sub: feToday.length ? feToday.length + (feToday.length === 1 ? ' feeder medido' : ' feeders medidos') : 'sin registro', color: '#1a73e8' },
-      { label: 'Ley Fe mes', value: avgFeMonth != null ? (Math.round(avgFeMonth * 100) / 100).toFixed(2).replace('.', ',') + '%' : '—', sub: feMaxDay ? 'hasta el día ' + String(feMaxDay).padStart(2, '0') : 'sin registro', color: '#1a73e8', series: feSeries },
+      { label: 'Humedad prom. día', value: avgHum != null ? fmtHum(avgHum) : '—', sub: humToday.length ? humToday.length + (humToday.length === 1 ? ' feeder medido' : ' feeders medidos') : 'sin registro', color: avgHum != null ? humCellColor(avgHum).bg : '#1a73e8' },
+      { label: 'Humedad prom. mes', value: avgHumMonth != null ? fmtHum(avgHumMonth) : '—', sub: humMaxDay ? 'hasta el día ' + String(humMaxDay).padStart(2, '0') : 'sin registro', color: avgHumMonth != null ? humCellColor(avgHumMonth).bg : '#1a73e8', series: humSeries },
+      { label: 'Ley Fe día', value: avgFe != null ? (Math.round(avgFe * 100) / 100).toFixed(2).replace('.', ',') + '%' : '—', sub: feToday.length ? feToday.length + (feToday.length === 1 ? ' feeder medido' : ' feeders medidos') : 'sin registro', color: avgFe != null ? feColor(avgFe).bg : '#1a73e8' },
+      { label: 'Ley Fe mes', value: avgFeMonth != null ? (Math.round(avgFeMonth * 100) / 100).toFixed(2).replace('.', ',') + '%' : '—', sub: feMaxDay ? 'hasta el día ' + String(feMaxDay).padStart(2, '0') : 'sin registro', color: avgFeMonth != null ? feColor(avgFeMonth).bg : '#1a73e8', series: feSeries },
       { label: 'Acopio sobre secado', value: String(contamTotal), sub: 'eventos en el mes', color: contamTotal > 0 ? '#dc2626' : '#1f9d55' },
       { label: 'Próximo embarque', value: nextV.txt, sub: nextV.sub, color: '#182a44' },
     ];
