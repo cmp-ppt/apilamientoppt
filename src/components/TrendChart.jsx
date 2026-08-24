@@ -1,6 +1,6 @@
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, ResponsiveContainer } from 'recharts';
 
-export default function TrendChart({ title, data, dataKey = 'value', color = '#1a73e8', setpoint, average, unit = '', height = 180, domain = [0, 'auto'] }) {
+export default function TrendChart({ title, data, dataKey = 'value', color = '#1a73e8', setpoint, unit = '', height = 180, domain = [0, 'auto'] }) {
   return (
     <div>
       {title && <div className="scada-label" style={{ marginBottom: 8 }}>{title}</div>}
@@ -26,9 +26,6 @@ export default function TrendChart({ title, data, dataKey = 'value', color = '#1
           />
           {setpoint != null && (
             <ReferenceLine y={setpoint} stroke="#ef9b3a" strokeDasharray="4 3" strokeWidth={1.5} />
-          )}
-          {average != null && (
-            <ReferenceLine y={average} stroke="#54637a" strokeDasharray="4 3" strokeWidth={1.5} />
           )}
           <Area type="monotone" dataKey={dataKey} stroke={color} strokeWidth={2} fill={`url(#grad-${color.replace('#', '')})`} connectNulls dot={false} activeDot={{ r: 3, fill: color }} />
         </AreaChart>

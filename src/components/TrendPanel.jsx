@@ -23,11 +23,6 @@ export default function TrendPanel() {
   const humSeries = useMemo(() => seriesFor(hum, month, cancha, shift, sectors, dim), [hum, month, cancha, shift, sectors, dim]);
   const feSeries = useMemo(() => seriesFor(fe, month, cancha, shift, sectors, dim), [fe, month, cancha, shift, sectors, dim]);
 
-  const avgFe = useMemo(() => {
-    const vals = feSeries.map((d) => d.value).filter((v) => v != null);
-    return vals.length ? Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 100) / 100 : null;
-  }, [feSeries]);
-
   // Piso minimo de rango (8-10 / 64-66) para que la linea no se vea plana con poca
   // variacion, pero se expande solo si un valor real cae fuera de ese piso.
   const humDomain = [(dataMin) => Math.min(8, dataMin - 0.3), (dataMax) => Math.max(10, dataMax + 0.3)];
@@ -38,7 +33,7 @@ export default function TrendPanel() {
       <div className="scada-label" style={{ marginBottom: 10 }}>TENDENCIA DEL MES</div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
         <TrendChart title="HUMEDAD PROMEDIO (%)" data={humSeries} color="#1a73e8" setpoint={TML} unit="%" domain={humDomain} />
-        <TrendChart title="LEY DE FE PROMEDIO (%)" data={feSeries} color="#1f9d55" unit="%" domain={feDomain} average={avgFe} />
+        <TrendChart title="LEY DE FE PROMEDIO (%)" data={feSeries} color="#1f9d55" unit="%" domain={feDomain} setpoint={65.5} />
       </div>
     </div>
   );
