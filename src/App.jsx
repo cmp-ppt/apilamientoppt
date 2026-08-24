@@ -31,7 +31,7 @@ function Dashboard() {
       {isSF && <KpiStrip kpis={sf.sfKpis} columns={6} />}
       {isSF && <KpiStrip kpis={sf.sfKpisMonth} columns={6} />}
 
-      <div className="main-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 340px', gap: 14, alignItems: 'start' }}>
+      <div className="main-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 340px', gap: 14, alignItems: 'stretch' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14, minWidth: 0 }}>
           {!isSF && <EstadoMatrix />}
           {!isSF && <ValueMatrix mode="humedad" />}

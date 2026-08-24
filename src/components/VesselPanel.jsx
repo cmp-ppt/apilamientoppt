@@ -21,12 +21,12 @@ export default function VesselPanel() {
   };
 
   return (
-    <div className="scada-panel no-print" style={{ padding: '12px 14px' }}>
+    <div className="scada-panel no-print" style={{ padding: '12px 14px', flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
         <div className="scada-label" style={{ color: '#182a44', fontSize: 11 }}>CALENDARIO DE MOTONAVES</div>
         <button className="no-print" onClick={openAdd} style={addBtn}>+ AGREGAR</button>
       </div>
-      <div className="scada-scroll" style={{ maxHeight: 320, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 6 }}>
+      <div className="scada-scroll" style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 6 }}>
         {vessels.length === 0 && (
           <div style={{ padding: '20px 8px', textAlign: 'center', color: '#9aa7b8', fontSize: 11.5 }}>
             Sin motonaves programadas este mes.<br />Usa <strong style={{ color: '#1a73e8' }}>+ Agregar</strong> para registrar una.
