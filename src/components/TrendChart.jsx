@@ -1,6 +1,6 @@
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, ResponsiveContainer } from 'recharts';
 
-export default function TrendChart({ title, data, dataKey = 'value', color = '#1a73e8', setpoint, unit = '', height = 180 }) {
+export default function TrendChart({ title, data, dataKey = 'value', color = '#1a73e8', setpoint, unit = '', height = 180, domain = [0, 'auto'] }) {
   return (
     <div>
       {title && <div className="scada-label" style={{ marginBottom: 8 }}>{title}</div>}
@@ -14,7 +14,7 @@ export default function TrendChart({ title, data, dataKey = 'value', color = '#1
           </defs>
           <CartesianGrid stroke="#e2e7ef" strokeDasharray="2 4" vertical={false} />
           <XAxis dataKey="day" tick={{ fill: '#54637a', fontSize: 9, fontFamily: 'JetBrains Mono, monospace' }} axisLine={{ stroke: '#e2e7ef' }} tickLine={false} />
-          <YAxis tick={{ fill: '#54637a', fontSize: 9, fontFamily: 'JetBrains Mono, monospace' }} axisLine={{ stroke: '#e2e7ef' }} tickLine={false} width={34} />
+          <YAxis domain={domain} tick={{ fill: '#54637a', fontSize: 9, fontFamily: 'JetBrains Mono, monospace' }} axisLine={{ stroke: '#e2e7ef' }} tickLine={false} width={34} />
           <Tooltip
             contentStyle={{ background: '#f6f8fb', border: '1px solid #e2e7ef', borderRadius: 4, fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
             labelStyle={{ color: '#54637a' }}
