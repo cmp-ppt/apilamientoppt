@@ -1,0 +1,49 @@
+# Publica el tablero en GitHub Pages.
+#
+# Este proyecto no se puede servir tal cual como el de demurrage: React y
+# Vite necesitan compilarse, y `dist/` está en .gitignore a propósito —no se
+# versiona lo generado—. Por eso Pages no puede "servir la rama": hay que
+# construir en cada push y subir el resultado.
+name: Publicar en GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:        # también a mano, desde la pestaña Actions
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Si se empujan dos cambios seguidos, manda el último: publicar el anterior
+# encima del nuevo dejaría el sitio atrasado sin que nadie lo note.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  construir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  publicar:
+    needs: construir
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - id: despliegue
+        uses: actions/deploy-pages@v4
