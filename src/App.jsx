@@ -1,4 +1,5 @@
 import { AcopioProvider, useAcopio } from './store/AcopioContext';
+import { AuthProvider, useAuth } from './store/AuthContext';
 import { useCanchaView, useSFView } from './hooks/useDerived';
 import Header from './components/Header';
 import TabBar from './components/TabBar';
@@ -12,6 +13,7 @@ import VesselPanel from './components/VesselPanel';
 import ShiftLogPanel from './components/ShiftLogPanel';
 import PrintShiftSummary from './components/PrintShiftSummary';
 import ModalRoot from './components/modals/ModalRoot';
+import LoginScreen from './components/LoginScreen';
 
 function Dashboard() {
   const { cancha } = useAcopio();
@@ -60,7 +62,23 @@ function Dashboard() {
 
 export default function App() {
   return (
-    <AcopioProvider>
+    <AuthProvider>
+      <AuthGate />
+    </AuthProvider>
+  );
+}
+
+function AuthGate() {
+  const { session, loading } = useAuth();
+
+  if (loading) {
+    return <div style={{ minHeight: '100vh', background: '#eef1f6' }} />;
+  }
+  if (!session) {
+    return <LoginScreen />;
+  }
+  return (
+    <AcopioProvider accessToken={session.access_token}>
       <Dashboard />
     </AcopioProvider>
   );

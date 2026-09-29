@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAcopio } from '../store/AcopioContext';
+import { useAuth } from '../store/AuthContext';
 import { useCanchaView } from '../hooks/useDerived';
 import { exportCSV } from '../utils/csv';
 import { TML } from '../constants';
@@ -25,6 +26,7 @@ function Clock() {
 export default function Header() {
   const { month, shiftMonth, cancha, data, hum, log, syncStatus, cloudEnabled } = useAcopio();
   const { closed } = useCanchaView();
+  const { user, signOut } = useAuth();
 
   const syncColor = syncStatus === 'ok' ? '#1f9d55' : syncStatus === 'error' ? '#dc2626' : '#ef9b3a';
   const syncLabel = syncStatus === 'ok' ? 'SINCRONIZADO' : syncStatus === 'error' ? 'SIN CONEXIÓN' : 'SINCRONIZANDO…';
@@ -72,6 +74,18 @@ export default function Header() {
         <button className="no-print" onClick={() => window.print()} style={actionBtnStyle}>REPORTE PDF</button>
         {cancha !== 'SF' && (
           <button className="no-print" onClick={() => exportCSV({ month, cancha, data, hum, log })} style={{ ...actionBtnStyle, background: 'transparent', color: '#1a73e8', border: '1px solid #1a73e8' }}>CSV</button>
+        )}
+
+        {user && (
+          <div className="no-print" style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#f6f8fb', border: '1px solid #e2e7ef', borderRadius: 4, padding: '5px 6px 5px 12px' }}>
+            <span className="font-mono-scada" style={{ fontSize: 10.5, fontWeight: 600, color: '#54637a' }}>{user.email}</span>
+            <button
+              onClick={signOut} title="Cerrar sesión"
+              style={{ border: '1px solid #e2e7ef', background: 'transparent', color: '#9aa7b8', borderRadius: 3, padding: '4px 9px', cursor: 'pointer', fontSize: 9.5, fontWeight: 700, fontFamily: "'JetBrains Mono',monospace" }}
+            >
+              SALIR
+            </button>
+          </div>
         )}
       </div>
     </header>

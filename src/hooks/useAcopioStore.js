@@ -64,7 +64,7 @@ function saveJSON(key, value) {
   try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* quota / privacy mode */ }
 }
 
-export function useAcopioStore() {
+export function useAcopioStore(accessToken) {
   const [month, setMonth] = useState('2026-06');
   const [cancha, setCancha] = useState('CNN');
   const [refDay, setRefDay] = useState(29);
@@ -90,12 +90,12 @@ export function useAcopioStore() {
 
   const editingRef = useRef(false);
 
-  const cloudEnabled = useCallback(() => !!(SYNC.url && SYNC.anonKey), []);
+  const cloudEnabled = useCallback(() => !!(SYNC.url && SYNC.anonKey && accessToken), [accessToken]);
   const cloudHeaders = useCallback((extra) => ({
     apikey: SYNC.anonKey,
-    Authorization: 'Bearer ' + SYNC.anonKey,
+    Authorization: 'Bearer ' + accessToken,
     ...extra,
-  }), []);
+  }), [accessToken]);
 
   const cloudGet = useCallback(async () => {
     const res = await fetch(SYNC.url + '/rest/v1/' + SYNC.table + '?select=key,value', { method: 'GET', headers: cloudHeaders() });
@@ -145,8 +145,10 @@ export function useAcopioStore() {
       cloudGet().then((map) => { if (map) { applyRemote(map); setSyncStatus('ok'); } }).catch(() => setSyncStatus('error'));
     }, SYNC.pollMs);
     return () => clearInterval(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    // Se vuelve a suscribir cuando cambia el token (login, o refresh automatico
+    // de Supabase cada ~1h): si no, el polling en segundo plano sigue usando un
+    // token vencido y todas las llamadas fallan silenciosamente el resto de la sesion.
+  }, [cloudEnabled, cloudGet, applyRemote]);
 
   // ---- persisted setters ----
   const saveData = useCallback((next) => { saveJSON(KEYS.data, next); setData(next); cloudPut(KEYS.data, next); }, [cloudPut]);
