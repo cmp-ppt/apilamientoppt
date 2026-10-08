@@ -30,7 +30,7 @@ const azuLegend = (cancha) => {
 const PARAM = {
   humedad: { title: 'HUMEDAD POR FEEDER', label: 'HUMEDAD', modalTitle: 'Registrar humedad' },
   fe: { title: 'LEY DE FE POR FEEDER', label: 'LEY DE FE', modalTitle: 'Registrar Ley Fe' },
-  azu: { title: 'AZUFRE POR FEEDER', label: 'AZUFRE', modalTitle: 'Registrar Azufre' },
+  azu: { title: 'LEY DE AZUFRE POR FEEDER', label: 'LEY DE AZUFRE', modalTitle: 'Registrar Ley de Azufre' },
 };
 
 export default function ValueMatrix({ mode }) {
@@ -42,7 +42,7 @@ export default function ValueMatrix({ mode }) {
   const subtitle = mode === 'fe'
     ? 'Clic en un feeder en acopio para registrar la Ley de Fe (%)'
     : mode === 'azu'
-      ? 'Clic en un feeder en acopio para registrar el Azufre (%)'
+      ? 'Clic en un feeder en acopio para registrar la Ley de Azufre (%)'
       : `Clic en un feeder en acopio para registrar la humedad medida (%) · TML ${tmlStr}%`;
 
   const openEdit = (sector, idx) => {
