@@ -1,6 +1,7 @@
 import { useAcopio } from '../store/AcopioContext';
 import { useCanchaView } from '../hooks/useDerived';
 import { TML } from '../constants';
+import { AZU_RANGE } from '../utils/format';
 import DayHeaderRow from './DayHeaderRow';
 import SectorTag from './SectorTag';
 
@@ -16,23 +17,41 @@ const FE_LEGEND = [
   { color: '#ef9b3a', label: '65,0 – 65,19%' },
   { color: '#dc2626', label: '< 65,0%' },
 ];
+const fmtPct = (n) => n.toString().replace('.', ',');
+const azuLegend = (cancha) => {
+  const { lo, hi } = AZU_RANGE[cancha] || AZU_RANGE.CNN;
+  return [
+    { color: '#1f9d55', label: `< ${fmtPct(lo)}%` },
+    { color: '#ef9b3a', label: `${fmtPct(lo)} – ${fmtPct(hi)}%` },
+    { color: '#dc2626', label: `> ${fmtPct(hi)}%` },
+  ];
+};
+
+const PARAM = {
+  humedad: { title: 'HUMEDAD POR FEEDER', label: 'HUMEDAD', modalTitle: 'Registrar humedad' },
+  fe: { title: 'LEY DE FE POR FEEDER', label: 'LEY DE FE', modalTitle: 'Registrar Ley Fe' },
+  azu: { title: 'AZUFRE POR FEEDER', label: 'AZUFRE', modalTitle: 'Registrar Azufre' },
+};
 
 export default function ValueMatrix({ mode }) {
   const { setModal } = useAcopio();
-  const { dayHeaders, rowsHum, rowsFe, canchaTitle } = useCanchaView();
-  const isFe = mode === 'fe';
-  const rows = isFe ? rowsFe : rowsHum;
-  const legend = isFe ? FE_LEGEND : HUM_LEGEND;
-  const title = isFe ? 'LEY DE FE POR FEEDER' : 'HUMEDAD POR FEEDER';
-  const subtitle = isFe ? 'Clic en un feeder en acopio para registrar la Ley de Fe (%)' : `Clic en un feeder en acopio para registrar la humedad medida (%) · TML ${tmlStr}%`;
+  const { dayHeaders, rowsHum, rowsFe, rowsAzu, canchaTitle, cancha } = useCanchaView();
+  const rows = mode === 'fe' ? rowsFe : mode === 'azu' ? rowsAzu : rowsHum;
+  const legend = mode === 'fe' ? FE_LEGEND : mode === 'azu' ? azuLegend(cancha) : HUM_LEGEND;
+  const { title, label, modalTitle } = PARAM[mode];
+  const subtitle = mode === 'fe'
+    ? 'Clic en un feeder en acopio para registrar la Ley de Fe (%)'
+    : mode === 'azu'
+      ? 'Clic en un feeder en acopio para registrar el Azufre (%)'
+      : `Clic en un feeder en acopio para registrar la humedad medida (%) · TML ${tmlStr}%`;
 
   const openEdit = (sector, idx) => {
     const cell = rows.find((r) => r.sector === sector).cells[idx];
     const dd = String(idx + 1).padStart(2, '0');
     setModal({
       kind: 'hum',
-      sector, idx, isFe,
-      title: isFe ? 'Registrar Ley Fe' : 'Registrar humedad',
+      sector, idx, param: mode, label,
+      title: modalTitle,
       subtitle: `${sector} · ${dd} · ${canchaTitle}`,
       initial: cell.measured ? String(cell.value).replace('.', ',') : '',
     });

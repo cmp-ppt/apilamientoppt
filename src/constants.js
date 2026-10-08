@@ -71,6 +71,7 @@ export const KEYS = {
   data: 'acopioData_v4',
   hum: 'acopioHum_v3',
   fe: 'acopioFe_v1',
+  azu: 'acopioAzu_v1',
   log: 'acopioLog_v4',
   vessels: 'acopioVessels_v2',
   sinter: 'acopioSinter_v1',

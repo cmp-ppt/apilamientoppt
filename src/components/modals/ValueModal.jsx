@@ -2,14 +2,17 @@ import { useState } from 'react';
 import { useAcopio } from '../../store/AcopioContext';
 import ModalShell from './ModalShell';
 
+const SETTERS = { fe: 'setFeAt', azu: 'setAzuAt', humedad: 'setHumAt' };
+
 export default function ValueModal({ modal }) {
-  const { setModal, setHumAt, setFeAt } = useAcopio();
+  const store = useAcopio();
+  const { setModal } = store;
   const [value, setValue] = useState(modal.initial || '');
 
   const close = () => setModal(null);
   const save = () => {
-    if (modal.isFe) setFeAt(modal.sector, modal.idx, value.trim());
-    else setHumAt(modal.sector, modal.idx, value.trim());
+    const setterName = SETTERS[modal.param] || 'setHumAt';
+    store[setterName](modal.sector, modal.idx, value.trim());
     close();
   };
   const onKey = (e) => { if (e.key === 'Enter') { e.preventDefault(); save(); } if (e.key === 'Escape') close(); };
@@ -18,7 +21,7 @@ export default function ValueModal({ modal }) {
     <ModalShell onClose={close}>
       <h3 style={{ fontSize: 15, fontWeight: 700, color: '#182a44', margin: 0 }}>{modal.title}</h3>
       <p className="font-mono-scada" style={{ fontSize: 10.5, color: '#54637a', fontWeight: 600, margin: '6px 0 14px' }}>{modal.subtitle}</p>
-      <label className="scada-label" style={{ display: 'block', marginBottom: 6 }}>{modal.isFe ? 'LEY DE FE' : 'HUMEDAD'}</label>
+      <label className="scada-label" style={{ display: 'block', marginBottom: 6 }}>{modal.label || 'HUMEDAD'}</label>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, border: '1.5px solid #e2e7ef', borderRadius: 4, padding: '10px 12px', background: '#eef1f6' }}>
         <input
           autoFocus

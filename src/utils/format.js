@@ -76,3 +76,17 @@ export function humCellColor(v) {
   if (v > TML) return { bg: '#ef9b3a', fg: '#2a1c00' };
   return { bg: '#1f9d55', fg: '#04160c' };
 }
+
+// Rangos distintos por cancha: Magnetita trabaja con tenores de azufre
+// mas altos que CNN, asi que el umbral "aceptable" tambien es mas alto.
+export const AZU_RANGE = {
+  PM: { lo: 0.30, hi: 0.5 },
+  CNN: { lo: 0.09, hi: 0.12 },
+};
+
+export function azuColor(v, cancha) {
+  const { lo, hi } = AZU_RANGE[cancha] || AZU_RANGE.CNN;
+  if (v > hi) return { bg: '#dc2626', fg: '#ffffff' };
+  if (v > lo) return { bg: '#ef9b3a', fg: '#2a1c00' };
+  return { bg: '#1f9d55', fg: '#04160c' };
+}

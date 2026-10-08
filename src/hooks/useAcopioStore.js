@@ -73,6 +73,7 @@ export function useAcopioStore(accessToken) {
   const [data, setData] = useState(() => loadJSON(KEYS.data, seedData()));
   const [hum, setHumState] = useState(() => loadJSON(KEYS.hum, {}));
   const [fe, setFeState] = useState(() => loadJSON(KEYS.fe, {}));
+  const [azu, setAzuState] = useState(() => loadJSON(KEYS.azu, {}));
   const [sinter, setSinterState] = useState(() => migrateSinter(loadJSON(KEYS.sinter, {})));
   const [sfOcc, setSfOccState] = useState(() => loadJSON(KEYS.sfOcc, {}));
   const [log, setLogState] = useState(() => loadJSON(KEYS.log, {}));
@@ -123,6 +124,7 @@ export function useAcopioStore(accessToken) {
     if (map[KEYS.data] != null) { saveJSON(KEYS.data, map[KEYS.data]); setData(map[KEYS.data]); }
     if (map[KEYS.hum] != null) { saveJSON(KEYS.hum, map[KEYS.hum]); setHumState(map[KEYS.hum]); }
     if (map[KEYS.fe] != null) { saveJSON(KEYS.fe, map[KEYS.fe]); setFeState(map[KEYS.fe]); }
+    if (map[KEYS.azu] != null) { saveJSON(KEYS.azu, map[KEYS.azu]); setAzuState(map[KEYS.azu]); }
     if (map[KEYS.log] != null) { saveJSON(KEYS.log, map[KEYS.log]); setLogState(map[KEYS.log]); }
     if (map[KEYS.vessels] != null) { saveJSON(KEYS.vessels, map[KEYS.vessels]); setVesselsState(map[KEYS.vessels]); }
     if (map[KEYS.sfOcc] != null) { saveJSON(KEYS.sfOcc, map[KEYS.sfOcc]); setSfOccState(map[KEYS.sfOcc]); }
@@ -154,6 +156,7 @@ export function useAcopioStore(accessToken) {
   const saveData = useCallback((next) => { saveJSON(KEYS.data, next); setData(next); cloudPut(KEYS.data, next); }, [cloudPut]);
   const saveHum = useCallback((next) => { saveJSON(KEYS.hum, next); setHumState(next); cloudPut(KEYS.hum, next); }, [cloudPut]);
   const saveFe = useCallback((next) => { saveJSON(KEYS.fe, next); setFeState(next); cloudPut(KEYS.fe, next); }, [cloudPut]);
+  const saveAzu = useCallback((next) => { saveJSON(KEYS.azu, next); setAzuState(next); cloudPut(KEYS.azu, next); }, [cloudPut]);
   const saveSinter = useCallback((next) => { saveJSON(KEYS.sinter, next); setSinterState(next); cloudPut(KEYS.sinter, next); }, [cloudPut]);
   const saveSFOcc = useCallback((next) => { saveJSON(KEYS.sfOcc, next); setSfOccState(next); cloudPut(KEYS.sfOcc, next); }, [cloudPut]);
   const saveLog = useCallback((next) => { saveJSON(KEYS.log, next); setLogState(next); cloudPut(KEYS.log, next); }, [cloudPut]);
@@ -236,6 +239,17 @@ export function useAcopioStore(accessToken) {
     else next[month][cancha][shift][sector][idx] = Number(v);
     saveFe(next);
   }, [fe, month, cancha, shift, saveFe]);
+
+  const setAzuAt = useCallback((sector, idx, raw) => {
+    const next = JSON.parse(JSON.stringify(azu || {}));
+    next[month] = next[month] || {}; next[month][cancha] = next[month][cancha] || {};
+    next[month][cancha][shift] = next[month][cancha][shift] || {};
+    next[month][cancha][shift][sector] = next[month][cancha][shift][sector] || {};
+    const v = String(raw).replace(',', '.');
+    if (raw === '' || raw == null || isNaN(Number(v))) delete next[month][cancha][shift][sector][idx];
+    else next[month][cancha][shift][sector][idx] = Number(v);
+    saveAzu(next);
+  }, [azu, month, cancha, shift, saveAzu]);
 
   const setSinterAt = useCallback((provider, paramKey, sector, idx, raw) => {
     const next = JSON.parse(JSON.stringify(sinter || {}));
@@ -336,7 +350,11 @@ export function useAcopioStore(accessToken) {
     const fb = nextFe?.[month]?.[cancha]?.[shift];
     if (fb) { for (const s of Object.keys(fb)) { if (fb[s]) delete fb[s][idx]; } }
     saveFe(nextFe);
-  }, [cancha, refDay, month, shift, sinter, saveSinter, sfOcc, saveSFOcc, data, saveData, log, saveLog, hum, saveHum, fe, saveFe]);
+    const nextAzu = JSON.parse(JSON.stringify(azu || {}));
+    const ab = nextAzu?.[month]?.[cancha]?.[shift];
+    if (ab) { for (const s of Object.keys(ab)) { if (ab[s]) delete ab[s][idx]; } }
+    saveAzu(nextAzu);
+  }, [cancha, refDay, month, shift, sinter, saveSinter, sfOcc, saveSFOcc, data, saveData, log, saveLog, hum, saveHum, fe, saveFe, azu, saveAzu]);
 
   const importExcel = useCallback(async (file) => {
     let rows;
@@ -442,7 +460,7 @@ export function useAcopioStore(accessToken) {
   return {
     // state
     month, cancha, refDay, shift,
-    data, hum, fe, sinter, sfOcc, log, vessels,
+    data, hum, fe, azu, sinter, sfOcc, log, vessels,
     modal, modalVesselType, syncStatus,
     cloudEnabled: cloudEnabled(),
     editingRef,
@@ -451,7 +469,7 @@ export function useAcopioStore(accessToken) {
     // derived
     vesselsFor, eventForDay, effHum, ensureMonth: (d, mo) => ensureMonth(d, mo), ensureSFMonth: (o, mo) => ensureSFMonth(o, mo),
     // actions
-    shiftMonth, cycle, cycleSF, setHumAt, setFeAt, setSinterAt, setSinterMulti, setLog,
+    shiftMonth, cycle, cycleSF, setHumAt, setFeAt, setAzuAt, setSinterAt, setSinterMulti, setLog,
     saveVesselForm, deleteVessel, doReset, requestReset, importExcel, importExcelSinter,
   };
 }

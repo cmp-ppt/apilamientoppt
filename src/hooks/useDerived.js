@@ -1,13 +1,13 @@
 import { useMemo } from 'react';
 import { useAcopio } from '../store/AcopioContext';
 import { SECTORS, TONS, MESES, DOW, SF_PARAMS, SF_PROVIDERS, TML } from '../constants';
-import { daysInMonth, parseMonth, streak, fmtHum, fmtCell, fmtSF, fmtSFShort, specPass, humColor, humWord, feColor, humCellColor, fmt } from '../utils/format';
+import { daysInMonth, parseMonth, streak, fmtHum, fmtCell, fmtSF, fmtSFShort, specPass, humColor, humWord, feColor, humCellColor, azuColor, fmt } from '../utils/format';
 
 // Data for an occupancy cancha (CNN or PM, or the active tab's cancha by default).
 // Pass canchaOverride (e.g. 'CNN') to read a specific cancha regardless of the active tab —
 // used by the multi-cancha overview and the cross-area alarm feed.
 export function useCanchaView(canchaOverride) {
-  const { month, cancha: activeCancha, refDay, shift, data, hum, fe, vessels, vesselsFor, eventForDay, ensureMonth } = useAcopio();
+  const { month, cancha: activeCancha, refDay, shift, data, hum, fe, azu, vessels, vesselsFor, eventForDay, ensureMonth } = useAcopio();
   const cancha = canchaOverride || activeCancha;
   return useMemo(() => {
     const isSF = cancha === 'SF';
@@ -47,15 +47,19 @@ export function useCanchaView(canchaOverride) {
       const cells = arr.map((st, i) => {
         const isRef = i === refIdx;
         const dias = st === 'secado' ? streak(arr, i) : 0;
-        if (mode === 'humedad' || mode === 'fe') {
+        if (mode === 'humedad' || mode === 'fe' || mode === 'azu') {
           const isFe = mode === 'fe';
+          const isAzu = mode === 'azu';
           const clickable = st !== 'libre';
-          const store = isFe ? fe : hum;
+          const store = isFe ? fe : isAzu ? azu : hum;
           const ov = store?.[month]?.[cancha]?.[shift]?.[s]?.[i];
           const measured = ov != null && !isNaN(ov);
           const val = measured ? Number(ov) : null;
           let bg = null, fg = null;
-          if (measured) { const c = isFe ? feColor(val) : humCellColor(val); bg = c.bg; fg = c.fg; }
+          if (measured) {
+            const c = isFe ? feColor(val) : isAzu ? azuColor(val, occCancha) : humCellColor(val);
+            bg = c.bg; fg = c.fg;
+          }
           return { day: i + 1, isRef, clickable, measured, value: val, text: measured ? fmtCell(val) : '', bg, fg, state: st };
         }
         const isBad = st === 'fresca' && contam[s].has(i);
@@ -67,6 +71,7 @@ export function useCanchaView(canchaOverride) {
     const rowsEstado = makeRows('estado');
     const rowsHum = makeRows('humedad');
     const rowsFe = makeRows('fe');
+    const rowsAzu = makeRows('azu');
 
     const semaforo = sectors.map((s) => {
       const arr = monthData[s];
@@ -182,14 +187,14 @@ export function useCanchaView(canchaOverride) {
     const closed = ev && ev.op === 'cerrado';
 
     return {
-      isSF, dim, sectors, tons, monthData, dayHeaders,
-      rowsEstado, rowsHum, rowsFe, semaforo, vessels: vesselsView,
+      isSF, cancha, dim, sectors, tons, monthData, dayHeaders,
+      rowsEstado, rowsHum, rowsFe, rowsAzu, semaforo, vessels: vesselsView,
       kpis, contamTotal, closed, refIdx,
       occRaw: occ, avgHumRaw: avgHum, avgFeRaw: avgFe,
       monthLabel: MESES[m - 1] + ' ' + y,
       canchaTitle: cancha === 'CNN' ? 'Cancha CNN' : cancha === 'PM' ? 'Cancha Magnetita' : 'Sinter Feed',
     };
-  }, [month, cancha, refDay, shift, data, hum, fe, vessels, vesselsFor, eventForDay, ensureMonth]);
+  }, [month, cancha, refDay, shift, data, hum, fe, azu, vessels, vesselsFor, eventForDay, ensureMonth]);
 }
 
 export function useSFView() {

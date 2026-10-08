@@ -38,6 +38,7 @@ function Dashboard() {
           {!isSF && <EstadoMatrix />}
           {!isSF && <ValueMatrix mode="humedad" />}
           {!isSF && <ValueMatrix mode="fe" />}
+          {!isSF && <ValueMatrix mode="azu" />}
           {!isSF && <TrendPanel />}
           {isSF && <SinterFeedPanel />}
         </div>
