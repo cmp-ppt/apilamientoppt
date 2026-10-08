@@ -198,6 +198,12 @@ input[type='number'] {
   .matrix-scroll {
     overflow: visible !important;
   }
+  .matrix-trend-row {
+    flex-direction: column !important;
+  }
+  .matrix-trend-row > * {
+    width: auto !important;
+  }
   .scada-panel {
     break-inside: avoid;
     page-break-inside: avoid;

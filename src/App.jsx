@@ -7,7 +7,6 @@ import KpiStrip from './components/KpiStrip';
 import EstadoMatrix from './components/EstadoMatrix';
 import ValueMatrix from './components/ValueMatrix';
 import SinterFeedPanel from './components/SinterFeedPanel';
-import TrendPanel from './components/TrendPanel';
 import AlarmPanel from './components/AlarmPanel';
 import VesselPanel from './components/VesselPanel';
 import ShiftLogPanel from './components/ShiftLogPanel';
@@ -29,7 +28,7 @@ function Dashboard() {
         <TabBar />
       </div>
 
-      {!isSF && <KpiStrip kpis={cancha_.kpis} columns={8} />}
+      {!isSF && <KpiStrip kpis={cancha_.kpis} columns={5} />}
       {isSF && <KpiStrip kpis={sf.sfKpis} columns={6} />}
       {isSF && <KpiStrip kpis={sf.sfKpisMonth} columns={6} />}
 
@@ -39,7 +38,6 @@ function Dashboard() {
           {!isSF && <ValueMatrix mode="humedad" />}
           {!isSF && <ValueMatrix mode="fe" />}
           {!isSF && <ValueMatrix mode="azu" />}
-          {!isSF && <TrendPanel />}
           {isSF && <SinterFeedPanel />}
         </div>
 
