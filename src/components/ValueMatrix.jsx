@@ -79,7 +79,7 @@ export default function ValueMatrix({ mode }) {
   return (
     <div className="scada-panel" style={{ padding: '12px 14px' }}>
       <div className="matrix-trend-row" style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-        <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ flex: '0 1 auto', minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 10, flexWrap: 'wrap' }}>
             <div>
               <div className="scada-label" style={{ color: '#182a44', fontSize: 11 }}>{title} — {canchaTitle.toUpperCase()}</div>
@@ -127,9 +127,9 @@ export default function ValueMatrix({ mode }) {
           </div>
         </div>
 
-        <div style={{ width: 300, flex: 'none' }}>
+        <div style={{ flex: 1, minWidth: 280 }}>
           <TrendChart
-            title={chartTitle} data={series} color={chartColor} unit="%" height={210}
+            title={chartTitle} data={series} color={chartColor} unit="%" height={260}
             domain={domainFor(mode, cancha)} setpoint={setpointFor(mode, cancha)}
           />
         </div>
