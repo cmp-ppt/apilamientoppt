@@ -362,13 +362,14 @@ export function useAcopioStore(accessToken) {
     catch (err) { return { ok: false, message: String(err.message || err) }; }
     const nextHum = JSON.parse(JSON.stringify(hum || {}));
     const nextFe = JSON.parse(JSON.stringify(fe || {}));
+    const nextAzu = JSON.parse(JSON.stringify(azu || {}));
     const SH = ['D', 'N'];
     const setNested = (obj, mo, ca, sh, fd, idx, val) => {
       obj[mo] = obj[mo] || {}; obj[mo][ca] = obj[mo][ca] || {}; obj[mo][ca][sh] = obj[mo][ca][sh] || {};
       obj[mo][ca][sh][fd] = obj[mo][ca][sh][fd] || {}; obj[mo][ca][sh][fd][idx] = val;
     };
     let filled = 0;
-    const map = { CNN: { fe: 'feCNN', hum: 'humCNN' }, PM: { fe: 'fePM', hum: 'humPM' } };
+    const map = { CNN: { fe: 'feCNN', hum: 'humCNN', azu: 'azuCNN' }, PM: { fe: 'fePM', hum: 'humPM', azu: 'azuPM' } };
     for (const row of rows) {
       const [Y, M, D] = row.date.split('-').map(Number);
       const mo = Y + '-' + String(M).padStart(2, '0');
@@ -379,24 +380,25 @@ export function useAcopioStore(accessToken) {
         for (const fd of SECTORS[ca]) {
           const st = occ[fd] && occ[fd][idx];
           if (st === 'fresca') {
-            const hv = row[map[ca].hum], fv = row[map[ca].fe];
+            const hv = row[map[ca].hum], fv = row[map[ca].fe], av = row[map[ca].azu];
             for (const sh of SH) {
               if (hv != null && !isNaN(hv)) { setNested(nextHum, mo, ca, sh, fd, idx, Math.round(hv * 100) / 100); filled++; }
               if (fv != null && !isNaN(fv)) { setNested(nextFe, mo, ca, sh, fd, idx, Math.round(fv * 100) / 100); }
+              if (av != null && !isNaN(av)) { setNested(nextAzu, mo, ca, sh, fd, idx, Math.round(av * 100) / 100); }
             }
           }
         }
       }
     }
-    saveHum(nextHum); saveFe(nextFe);
+    saveHum(nextHum); saveFe(nextFe); saveAzu(nextAzu);
     const nMonths = new Set(rows.map((r) => r.date.slice(0, 7))).size;
     return {
       ok: true,
       message: filled > 0
-        ? `Se importaron ${rows.length} días (${nMonths} ${nMonths === 1 ? 'mes' : 'meses'}). Los valores de humedad y Ley Fe se aplicaron a los feeders en acopio fresco.`
+        ? `Se importaron ${rows.length} días (${nMonths} ${nMonths === 1 ? 'mes' : 'meses'}). Los valores de humedad, Ley Fe y Ley de Azufre se aplicaron a los feeders en acopio fresco.`
         : `Se leyeron ${rows.length} días, pero ningún feeder estaba en acopio fresco en esas fechas, así que no se aplicó ningún valor.`,
     };
-  }, [hum, fe, data, saveHum, saveFe]);
+  }, [hum, fe, azu, data, saveHum, saveFe, saveAzu]);
 
   const importExcelSinter = useCallback(async (file) => {
     let rows;

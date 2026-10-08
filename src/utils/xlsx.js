@@ -84,6 +84,12 @@ export function serialToDate(s) {
   return d.toISOString().slice(0, 10);
 }
 
+// Formato real del reporte "Calidades filtrado CNN y PM": fila 1-2 son
+// encabezados, datos desde la fila 3. Columnas por cancha (A=fecha):
+// CNN  B=Hierro(Fe) C=Azufre D=Fosforo(no usado) E=Humedad F=Granulometria(no usado) G=Produccion(no usado)
+// PM   H=Hierro(Fe) I=Azufre J=Fosforo(no usado) K=Humedad L=Granulometria(no usado) M=Produccion(no usado)
+// Un dia sin produccion queda con Hierro en 0 (o la celda vacia) — se omite
+// ese dia para esa cancha en vez de importar un 0% de ley/humedad falso.
 export async function xlsxRows(buf) {
   const grid = await xlsxGrid(buf);
   const rows = [];
@@ -91,7 +97,17 @@ export async function xlsxRows(buf) {
     const c = grid[r];
     if (!c) continue;
     if (typeof c[1] !== 'number') continue;
-    rows.push({ date: serialToDate(c[1]), feCNN: c[2], fePM: c[3], humCNN: c[4], humPM: c[5] });
+    const noCNN = !c[2];
+    const noPM = !c[8];
+    rows.push({
+      date: serialToDate(c[1]),
+      feCNN: noCNN ? null : c[2],
+      azuCNN: noCNN ? null : c[3],
+      humCNN: noCNN ? null : c[5],
+      fePM: noPM ? null : c[8],
+      azuPM: noPM ? null : c[9],
+      humPM: noPM ? null : c[11],
+    });
   }
   return rows;
 }
