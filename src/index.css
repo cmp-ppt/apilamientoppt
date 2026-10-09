@@ -140,6 +140,16 @@ input[type='number'] {
   }
 }
 
+@media (max-width: 860px) {
+  .matrix-trend-row {
+    flex-direction: column !important;
+  }
+  .matrix-trend-row > * {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}
+
 @media (max-width: 720px) {
   #dash {
     padding: 10px 10px 24px !important;
