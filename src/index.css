@@ -214,7 +214,14 @@ input[type='number'] {
   .matrix-trend-row > * {
     width: auto !important;
   }
+  .trend-chart-box {
+    height: 150px !important;
+  }
   .scada-panel {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .print-pair {
     break-inside: avoid;
     page-break-inside: avoid;
   }

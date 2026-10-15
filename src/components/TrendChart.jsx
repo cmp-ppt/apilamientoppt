@@ -4,7 +4,8 @@ export default function TrendChart({ title, data, dataKey = 'value', color = '#1
   return (
     <div>
       {title && <div className="scada-label" style={{ marginBottom: 8 }}>{title}</div>}
-      <ResponsiveContainer width="100%" height={height}>
+      <div className="trend-chart-box" style={{ height }}>
+      <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data} margin={{ top: 6, right: 10, bottom: 0, left: 0 }}>
           <defs>
             <linearGradient id={`grad-${color.replace('#', '')}`} x1="0" y1="0" x2="0" y2="1">
@@ -30,6 +31,7 @@ export default function TrendChart({ title, data, dataKey = 'value', color = '#1
           <Area type="monotone" dataKey={dataKey} stroke={color} strokeWidth={2} fill={`url(#grad-${color.replace('#', '')})`} connectNulls dot={false} activeDot={{ r: 3, fill: color }} />
         </AreaChart>
       </ResponsiveContainer>
+      </div>
     </div>
   );
 }
