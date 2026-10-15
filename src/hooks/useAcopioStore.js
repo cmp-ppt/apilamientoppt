@@ -51,6 +51,11 @@ function migrateSinter(obj) {
   return out;
 }
 
+function currentMonthStr() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+}
+
 function loadJSON(key, fallback) {
   try {
     const raw = localStorage.getItem(key);
@@ -65,9 +70,9 @@ function saveJSON(key, value) {
 }
 
 export function useAcopioStore(accessToken) {
-  const [month, setMonth] = useState('2026-06');
+  const [month, setMonth] = useState(currentMonthStr());
   const [cancha, setCancha] = useState('CNN');
-  const [refDay, setRefDay] = useState(29);
+  const [refDay, setRefDay] = useState(() => new Date().getDate());
   const [shift, setShift] = useState('D');
 
   const [data, setData] = useState(() => loadJSON(KEYS.data, seedData()));
