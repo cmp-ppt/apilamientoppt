@@ -414,10 +414,12 @@ export function useAcopioStore(accessToken, userEmail, userName) {
       obj[mo][ca][sh][fd] = obj[mo][ca][sh][fd] || {}; obj[mo][ca][sh][fd][idx] = val;
     };
     let filled = 0;
+    let otherMonths = 0;
     const map = { CNN: { fe: 'feCNN', hum: 'humCNN', azu: 'azuCNN' }, PM: { fe: 'fePM', hum: 'humPM', azu: 'azuPM' } };
     for (const row of rows) {
       const [Y, M, D] = row.date.split('-').map(Number);
       const mo = Y + '-' + String(M).padStart(2, '0');
+      if (mo !== month) { otherMonths++; continue; } // solo se actualiza el mes en curso — no toca meses anteriores
       const idx = D - 1;
       for (const ca of ['CNN', 'PM']) {
         const occ = data?.[mo]?.[ca];
@@ -436,15 +438,14 @@ export function useAcopioStore(accessToken, userEmail, userName) {
       }
     }
     saveHum(nextHum); saveFe(nextFe); saveAzu(nextAzu);
-    const nMonths = new Set(rows.map((r) => r.date.slice(0, 7))).size;
-    logEvent('Importó Excel', 'IMPORTACIÓN', `${file.name} · ${rows.length} días leídos · ${filled} valores aplicados`);
+    logEvent('Importó Excel', 'IMPORTACIÓN', `${file.name} · mes ${month} · ${filled} valores aplicados · ${otherMonths} días de otros meses ignorados`);
     return {
       ok: true,
       message: filled > 0
-        ? `Se importaron ${rows.length} días (${nMonths} ${nMonths === 1 ? 'mes' : 'meses'}). Los valores de humedad, Ley Fe y Ley de Azufre se aplicaron a los feeders en acopio fresco.`
-        : `Se leyeron ${rows.length} días, pero ningún feeder estaba en acopio fresco en esas fechas, así que no se aplicó ningún valor.`,
+        ? `Se aplicaron los valores de humedad, Ley Fe y Ley de Azufre del mes ${month} a los feeders en acopio fresco${otherMonths > 0 ? ` (se ignoraron ${otherMonths} días de otros meses del Excel)` : ''}.`
+        : `No se encontraron días del mes ${month} con un feeder en acopio fresco en el Excel, así que no se aplicó ningún valor.${otherMonths > 0 ? ` (se ignoraron ${otherMonths} días de otros meses)` : ''}`,
     };
-  }, [hum, fe, azu, data, saveHum, saveFe, saveAzu, logEvent]);
+  }, [hum, fe, azu, data, month, saveHum, saveFe, saveAzu, logEvent]);
 
   const importExcelSinter = useCallback(async (file) => {
     let rows;
@@ -459,9 +460,11 @@ export function useAcopioStore(accessToken, userEmail, userName) {
     const paramKeys = ['fe', 'p', 'sio2', 'al2o3', 's', 'tio2'];
     const keyMap = { fe: 'fet', p: 'p', sio2: 'sio2', al2o3: 'al2o3', s: 's', tio2: 'tio2' };
     let daysWithData = 0;
+    let otherMonths = 0;
     for (const row of rows) {
       const [Y, M, D] = row.date.split('-').map(Number);
       const mo = Y + '-' + String(M).padStart(2, '0');
+      if (mo !== month) { otherMonths++; continue; } // solo se actualiza el mes en curso — no toca meses anteriores
       const idx = D - 1;
       let anyData = false;
       for (const provKey of ['ema', 'bella']) {
@@ -488,15 +491,14 @@ export function useAcopioStore(accessToken, userEmail, userName) {
       if (anyData) daysWithData++;
     }
     saveSinter(next);
-    const nMonths = new Set(rows.map((r) => r.date.slice(0, 7))).size;
-    logEvent('Importó Excel', 'IMPORTACIÓN', `${file.name} · ${rows.length} días leídos · ${daysWithData} días con datos`);
+    logEvent('Importó Excel', 'IMPORTACIÓN', `${file.name} · mes ${month} · ${daysWithData} días con datos · ${otherMonths} días de otros meses ignorados`);
     return {
       ok: true,
-      message: rows.length > 0
-        ? `Se leyeron ${rows.length} días (${nMonths} ${nMonths === 1 ? 'mes' : 'meses'}). Se registraron las leyes de ${daysWithData} días con datos en los 6 feeders de cada proveedor. Marca la Ocupación manualmente para que las leyes se muestren.`
-        : 'No se encontraron filas de datos válidas en el Excel.',
+      message: daysWithData > 0
+        ? `Se registraron las leyes de ${daysWithData} días del mes ${month} en los 6 feeders de cada proveedor${otherMonths > 0 ? ` (se ignoraron ${otherMonths} días de otros meses del Excel)` : ''}. Marca la Ocupación manualmente para que las leyes se muestren.`
+        : `No se encontraron días del mes ${month} con datos válidos en el Excel.${otherMonths > 0 ? ` (se ignoraron ${otherMonths} días de otros meses)` : ''}`,
     };
-  }, [sinter, saveSinter, logEvent]);
+  }, [sinter, month, saveSinter, logEvent]);
 
   const requestReset = useCallback(() => {
     const { m } = parseMonth(month);
