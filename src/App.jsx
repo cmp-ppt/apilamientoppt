@@ -81,7 +81,7 @@ function AuthGate() {
     return <LoginScreen />;
   }
   return (
-    <AcopioProvider accessToken={session.access_token}>
+    <AcopioProvider accessToken={session.access_token} userEmail={session.user?.email} userName={session.user?.user_metadata?.full_name || session.user?.user_metadata?.name}>
       <Dashboard />
     </AcopioProvider>
   );

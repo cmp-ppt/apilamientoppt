@@ -3,6 +3,7 @@ import ValueModal from './ValueModal';
 import Sinter6Modal from './Sinter6Modal';
 import VesselModal from './VesselModal';
 import ConfirmModal from './ConfirmModal';
+import AuditLogModal from './AuditLogModal';
 
 export default function ModalRoot() {
   const { modal } = useAcopio();
@@ -11,5 +12,6 @@ export default function ModalRoot() {
   if (modal.kind === 'sinter6') return <Sinter6Modal modal={modal} />;
   if (modal.kind === 'vessel') return <VesselModal modal={modal} />;
   if (modal.kind === 'confirm') return <ConfirmModal modal={modal} />;
+  if (modal.kind === 'auditLog') return <AuditLogModal />;
   return null;
 }

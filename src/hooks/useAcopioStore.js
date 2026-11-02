@@ -69,7 +69,14 @@ function saveJSON(key, value) {
   try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* quota / privacy mode */ }
 }
 
-export function useAcopioStore(accessToken) {
+function friendlyName(email, name) {
+  if (name) return name;
+  if (!email) return 'Desconocido';
+  return email.split('@')[0].split(/[._-]+/).filter(Boolean)
+    .map((w) => w[0].toUpperCase() + w.slice(1)).join(' ');
+}
+
+export function useAcopioStore(accessToken, userEmail, userName) {
   const [month, setMonth] = useState(currentMonthStr());
   const [cancha, setCancha] = useState('CNN');
   const [refDay, setRefDay] = useState(() => new Date().getDate());
@@ -82,6 +89,7 @@ export function useAcopioStore(accessToken) {
   const [sinter, setSinterState] = useState(() => migrateSinter(loadJSON(KEYS.sinter, {})));
   const [sfOcc, setSfOccState] = useState(() => loadJSON(KEYS.sfOcc, {}));
   const [log, setLogState] = useState(() => loadJSON(KEYS.log, {}));
+  const [auditLog, setAuditLogState] = useState(() => loadJSON(KEYS.auditLog, []));
   const [vessels, setVesselsState] = useState(() => {
     const v = loadJSON(KEYS.vessels, null);
     if (v) return v;
@@ -131,6 +139,15 @@ export function useAcopioStore(accessToken) {
     if (map[KEYS.fe] != null) { saveJSON(KEYS.fe, map[KEYS.fe]); setFeState(map[KEYS.fe]); }
     if (map[KEYS.azu] != null) { saveJSON(KEYS.azu, map[KEYS.azu]); setAzuState(map[KEYS.azu]); }
     if (map[KEYS.log] != null) { saveJSON(KEYS.log, map[KEYS.log]); setLogState(map[KEYS.log]); }
+    if (Array.isArray(map[KEYS.auditLog])) {
+      setAuditLogState((prev) => {
+        const byId = new Map((prev || []).map((e) => [e.id, e]));
+        for (const e of map[KEYS.auditLog]) byId.set(e.id, e);
+        const merged = Array.from(byId.values()).sort((a, b) => (b.ts || '').localeCompare(a.ts || '')).slice(0, 300);
+        saveJSON(KEYS.auditLog, merged);
+        return merged;
+      });
+    }
     if (map[KEYS.vessels] != null) { saveJSON(KEYS.vessels, map[KEYS.vessels]); setVesselsState(map[KEYS.vessels]); }
     if (map[KEYS.sfOcc] != null) { saveJSON(KEYS.sfOcc, map[KEYS.sfOcc]); setSfOccState(map[KEYS.sfOcc]); }
     if (map[KEYS.sinter] != null) {
@@ -166,6 +183,19 @@ export function useAcopioStore(accessToken) {
   const saveSFOcc = useCallback((next) => { saveJSON(KEYS.sfOcc, next); setSfOccState(next); cloudPut(KEYS.sfOcc, next); }, [cloudPut]);
   const saveLog = useCallback((next) => { saveJSON(KEYS.log, next); setLogState(next); cloudPut(KEYS.log, next); }, [cloudPut]);
   const saveVessels = useCallback((next) => { saveJSON(KEYS.vessels, next); setVesselsState(next); cloudPut(KEYS.vessels, next); }, [cloudPut]);
+  const saveAuditLog = useCallback((next) => { saveJSON(KEYS.auditLog, next); setAuditLogState(next); cloudPut(KEYS.auditLog, next); }, [cloudPut]);
+
+  // Registra un evento en el historial de cambios (quién hizo qué, cuándo y dónde).
+  const logEvent = useCallback((action, location, detail) => {
+    const entry = {
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
+      ts: new Date().toISOString(),
+      email: userEmail || null,
+      user: friendlyName(userEmail, userName),
+      action, location, detail: detail || '',
+    };
+    saveAuditLog([entry, ...(auditLog || [])].slice(0, 300));
+  }, [auditLog, saveAuditLog, userEmail, userName]);
 
   // ---- derived helpers ----
   const vesselsFor = useCallback((mo) => (Array.isArray(vessels[mo]) ? vessels[mo] : []), [vessels]);
@@ -197,9 +227,11 @@ export function useAcopioStore(accessToken) {
   const cycle = useCallback((sector, dayIdx) => {
     const d = ensureMonth(data, month);
     const arr = d[month][cancha][sector].slice();
-    arr[dayIdx] = STATE_ORDER[(STATE_ORDER.indexOf(arr[dayIdx]) + 1) % 3];
+    const newState = STATE_ORDER[(STATE_ORDER.indexOf(arr[dayIdx]) + 1) % 3];
+    arr[dayIdx] = newState;
     saveData({ ...d, [month]: { ...d[month], [cancha]: { ...d[month][cancha], [sector]: arr } } });
-  }, [data, month, cancha, saveData]);
+    logEvent('Cambió estado de acopio', 'OCUPACIÓN', `${cancha} · ${sector} · día ${String(dayIdx + 1).padStart(2, '0')} → ${newState}`);
+  }, [data, month, cancha, saveData, logEvent]);
 
   const cycleSF = useCallback((sector, dayIdx) => {
     let occ = ensureSFMonth(sfOcc, month);
@@ -232,7 +264,8 @@ export function useAcopioStore(accessToken) {
     if (raw === '' || raw == null || isNaN(Number(v))) delete next[month][cancha][shift][sector][idx];
     else next[month][cancha][shift][sector][idx] = Number(v);
     saveHum(next);
-  }, [hum, month, cancha, shift, saveHum]);
+    logEvent('Editó Humedad', 'HUMEDAD', `${cancha} · ${sector} · día ${String(idx + 1).padStart(2, '0')} · turno ${shift} → ${raw === '' || raw == null ? '(borrado)' : raw}`);
+  }, [hum, month, cancha, shift, saveHum, logEvent]);
 
   const setFeAt = useCallback((sector, idx, raw) => {
     const next = JSON.parse(JSON.stringify(fe || {}));
@@ -243,7 +276,8 @@ export function useAcopioStore(accessToken) {
     if (raw === '' || raw == null || isNaN(Number(v))) delete next[month][cancha][shift][sector][idx];
     else next[month][cancha][shift][sector][idx] = Number(v);
     saveFe(next);
-  }, [fe, month, cancha, shift, saveFe]);
+    logEvent('Editó Ley de Fe', 'LEY DE FE', `${cancha} · ${sector} · día ${String(idx + 1).padStart(2, '0')} · turno ${shift} → ${raw === '' || raw == null ? '(borrado)' : raw}`);
+  }, [fe, month, cancha, shift, saveFe, logEvent]);
 
   const setAzuAt = useCallback((sector, idx, raw) => {
     const next = JSON.parse(JSON.stringify(azu || {}));
@@ -254,7 +288,8 @@ export function useAcopioStore(accessToken) {
     if (raw === '' || raw == null || isNaN(Number(v))) delete next[month][cancha][shift][sector][idx];
     else next[month][cancha][shift][sector][idx] = Number(v);
     saveAzu(next);
-  }, [azu, month, cancha, shift, saveAzu]);
+    logEvent('Editó Ley de Azufre', 'LEY DE AZUFRE', `${cancha} · ${sector} · día ${String(idx + 1).padStart(2, '0')} · turno ${shift} → ${raw === '' || raw == null ? '(borrado)' : raw}`);
+  }, [azu, month, cancha, shift, saveAzu, logEvent]);
 
   const setSinterAt = useCallback((provider, paramKey, sector, idx, raw) => {
     const next = JSON.parse(JSON.stringify(sinter || {}));
@@ -336,6 +371,7 @@ export function useAcopioStore(accessToken) {
       const nextOcc = JSON.parse(JSON.stringify(ensureSFMonth(sfOcc, month)));
       for (const s of SECTORS.SF) { if (nextOcc[month][s]) nextOcc[month][s][idx] = 'libre'; }
       saveSFOcc(nextOcc);
+      logEvent('Borró día', 'RESET DÍA', `Sinter Feed · día ${String(refDay).padStart(2, '0')} · turno ${shift}`);
       return;
     }
     const nextData = JSON.parse(JSON.stringify(ensureMonth(data, month)));
@@ -359,12 +395,16 @@ export function useAcopioStore(accessToken) {
     const ab = nextAzu?.[month]?.[cancha]?.[shift];
     if (ab) { for (const s of Object.keys(ab)) { if (ab[s]) delete ab[s][idx]; } }
     saveAzu(nextAzu);
-  }, [cancha, refDay, month, shift, sinter, saveSinter, sfOcc, saveSFOcc, data, saveData, log, saveLog, hum, saveHum, fe, saveFe, azu, saveAzu]);
+    logEvent('Borró día', 'RESET DÍA', `${cancha} · día ${String(refDay).padStart(2, '0')} · turno ${shift}`);
+  }, [cancha, refDay, month, shift, sinter, saveSinter, sfOcc, saveSFOcc, data, saveData, log, saveLog, hum, saveHum, fe, saveFe, azu, saveAzu, logEvent]);
 
   const importExcel = useCallback(async (file) => {
     let rows;
     try { rows = await xlsxRows(await file.arrayBuffer()); }
-    catch (err) { return { ok: false, message: String(err.message || err) }; }
+    catch (err) {
+      logEvent('Error al importar Excel', 'IMPORTACIÓN', `${file.name} · ${String(err.message || err)}`);
+      return { ok: false, message: String(err.message || err) };
+    }
     const nextHum = JSON.parse(JSON.stringify(hum || {}));
     const nextFe = JSON.parse(JSON.stringify(fe || {}));
     const nextAzu = JSON.parse(JSON.stringify(azu || {}));
@@ -397,18 +437,22 @@ export function useAcopioStore(accessToken) {
     }
     saveHum(nextHum); saveFe(nextFe); saveAzu(nextAzu);
     const nMonths = new Set(rows.map((r) => r.date.slice(0, 7))).size;
+    logEvent('Importó Excel', 'IMPORTACIÓN', `${file.name} · ${rows.length} días leídos · ${filled} valores aplicados`);
     return {
       ok: true,
       message: filled > 0
         ? `Se importaron ${rows.length} días (${nMonths} ${nMonths === 1 ? 'mes' : 'meses'}). Los valores de humedad, Ley Fe y Ley de Azufre se aplicaron a los feeders en acopio fresco.`
         : `Se leyeron ${rows.length} días, pero ningún feeder estaba en acopio fresco en esas fechas, así que no se aplicó ningún valor.`,
     };
-  }, [hum, fe, azu, data, saveHum, saveFe, saveAzu]);
+  }, [hum, fe, azu, data, saveHum, saveFe, saveAzu, logEvent]);
 
   const importExcelSinter = useCallback(async (file) => {
     let rows;
     try { rows = await xlsxRowsSinter(await file.arrayBuffer()); }
-    catch (err) { return { ok: false, message: String(err.message || err) }; }
+    catch (err) {
+      logEvent('Error al importar Excel', 'IMPORTACIÓN', `${file.name} · ${String(err.message || err)}`);
+      return { ok: false, message: String(err.message || err) };
+    }
     const next = JSON.parse(JSON.stringify(sinter || {}));
     const sectors = SECTORS.SF;
     const SH = ['D', 'N'];
@@ -445,13 +489,14 @@ export function useAcopioStore(accessToken) {
     }
     saveSinter(next);
     const nMonths = new Set(rows.map((r) => r.date.slice(0, 7))).size;
+    logEvent('Importó Excel', 'IMPORTACIÓN', `${file.name} · ${rows.length} días leídos · ${daysWithData} días con datos`);
     return {
       ok: true,
       message: rows.length > 0
         ? `Se leyeron ${rows.length} días (${nMonths} ${nMonths === 1 ? 'mes' : 'meses'}). Se registraron las leyes de ${daysWithData} días con datos en los 6 feeders de cada proveedor. Marca la Ocupación manualmente para que las leyes se muestren.`
         : 'No se encontraron filas de datos válidas en el Excel.',
     };
-  }, [sinter, saveSinter]);
+  }, [sinter, saveSinter, logEvent]);
 
   const requestReset = useCallback(() => {
     const { m } = parseMonth(month);
@@ -467,7 +512,7 @@ export function useAcopioStore(accessToken) {
   return {
     // state
     month, cancha, refDay, shift,
-    data, hum, fe, azu, sinter, sfOcc, log, vessels,
+    data, hum, fe, azu, sinter, sfOcc, log, vessels, auditLog,
     modal, modalVesselType, syncStatus,
     cloudEnabled: cloudEnabled(),
     editingRef,

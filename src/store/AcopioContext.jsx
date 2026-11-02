@@ -3,8 +3,8 @@ import { useAcopioStore } from '../hooks/useAcopioStore';
 
 const AcopioContext = createContext(null);
 
-export function AcopioProvider({ children, accessToken }) {
-  const store = useAcopioStore(accessToken);
+export function AcopioProvider({ children, accessToken, userEmail, userName }) {
+  const store = useAcopioStore(accessToken, userEmail, userName);
   return <AcopioContext.Provider value={store}>{children}</AcopioContext.Provider>;
 }
 

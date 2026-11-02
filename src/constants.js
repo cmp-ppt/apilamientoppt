@@ -76,6 +76,7 @@ export const KEYS = {
   vessels: 'acopioVessels_v2',
   sinter: 'acopioSinter_v1',
   sfOcc: 'acopioSFOcc_v1',
+  auditLog: 'acopioAuditLog_v1',
 };
 
 export const DIAS_RECOMENDADOS = 6;

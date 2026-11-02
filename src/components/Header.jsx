@@ -24,7 +24,7 @@ function Clock() {
 }
 
 export default function Header() {
-  const { month, shiftMonth, cancha, data, hum, log, syncStatus, cloudEnabled } = useAcopio();
+  const { month, shiftMonth, cancha, data, hum, log, syncStatus, cloudEnabled, setModal } = useAcopio();
   const { closed } = useCanchaView();
   const { user, signOut } = useAuth();
 
@@ -75,6 +75,13 @@ export default function Header() {
         {cancha !== 'SF' && (
           <button className="no-print" onClick={() => exportCSV({ month, cancha, data, hum, log })} style={{ ...actionBtnStyle, background: 'transparent', color: '#1a73e8', border: '1px solid #1a73e8' }}>CSV</button>
         )}
+        <button
+          className="no-print" title="Ver historial de cambios: quién editó qué y cuándo"
+          onClick={() => setModal({ kind: 'auditLog' })}
+          style={{ ...actionBtnStyle, background: 'transparent', color: '#54637a', border: '1px solid #e2e7ef' }}
+        >
+          HISTORIAL
+        </button>
 
         {user && (
           <div className="no-print" style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#f6f8fb', border: '1px solid #e2e7ef', borderRadius: 4, padding: '5px 6px 5px 12px' }}>
