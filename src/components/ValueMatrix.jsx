@@ -46,7 +46,7 @@ function domainFor(mode, cancha) {
 }
 
 function setpointFor(mode, cancha) {
-  if (mode === 'fe') return 65.5;
+  if (mode === 'fe') return 65.0;
   if (mode === 'azu') return (AZU_RANGE[cancha] || AZU_RANGE.CNN).hi;
   return TML;
 }
