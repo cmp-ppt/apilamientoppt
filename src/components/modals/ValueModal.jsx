@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAcopio } from '../../store/AcopioContext';
 import ModalShell from './ModalShell';
 
-const SETTERS = { fe: 'setFeAt', azu: 'setAzuAt', humedad: 'setHumAt' };
+const SETTERS = { fe: 'setFeAt', azu: 'setAzuAt', al: 'setAlAt', humedad: 'setHumAt' };
 
 export default function ValueModal({ modal }) {
   const store = useAcopio();

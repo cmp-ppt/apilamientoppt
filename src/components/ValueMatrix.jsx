@@ -1,7 +1,7 @@
 import { useAcopio } from '../store/AcopioContext';
 import { useCanchaView } from '../hooks/useDerived';
 import { TML } from '../constants';
-import { AZU_RANGE } from '../utils/format';
+import { AZU_RANGE, AL_LIMIT } from '../utils/format';
 import DayHeaderRow from './DayHeaderRow';
 import SectorTag from './SectorTag';
 import TrendChart from './TrendChart';
@@ -27,11 +27,16 @@ const azuLegend = (cancha) => {
     { color: '#dc2626', label: `> ${fmtPct(hi)}%` },
   ];
 };
+const AL_LEGEND = [
+  { color: '#1f9d55', label: `≤ ${fmtPct(AL_LIMIT)}%` },
+  { color: '#dc2626', label: `> ${fmtPct(AL_LIMIT)}%` },
+];
 
 const PARAM = {
   humedad: { title: 'HUMEDAD POR FEEDER', label: 'HUMEDAD', modalTitle: 'Registrar humedad', chartColor: '#1a73e8', chartTitle: 'TENDENCIA DEL MES — HUMEDAD (%)' },
   fe: { title: 'LEY DE FE POR FEEDER', label: 'LEY DE FE', modalTitle: 'Registrar Ley Fe', chartColor: '#1f9d55', chartTitle: 'TENDENCIA DEL MES — LEY DE FE (%)' },
   azu: { title: 'LEY DE AZUFRE POR FEEDER', label: 'LEY DE AZUFRE', modalTitle: 'Registrar Ley de Azufre', chartColor: '#7c3aed', chartTitle: 'TENDENCIA DEL MES — LEY DE AZUFRE (%)' },
+  al: { title: 'LEY DE ALÚMINA POR FEEDER', label: 'LEY DE ALÚMINA', modalTitle: 'Registrar Ley de Alúmina', chartColor: '#b45309', chartTitle: 'TENDENCIA DEL MES — LEY DE ALÚMINA (%)' },
 };
 
 // Piso minimo de rango para que la linea no se vea plana con poca variacion,
@@ -42,27 +47,31 @@ function domainFor(mode, cancha) {
     const { hi } = AZU_RANGE[cancha] || AZU_RANGE.CNN;
     return [0, (dataMax) => Math.max(hi * 1.3, (dataMax || 0) * 1.15)];
   }
+  if (mode === 'al') return [0, (dataMax) => Math.max(AL_LIMIT * 1.3, (dataMax || 0) * 1.15)];
   return [(dataMin) => Math.min(8, dataMin - 0.3), (dataMax) => Math.max(10, dataMax + 0.3)];
 }
 
 function setpointFor(mode, cancha) {
   if (mode === 'fe') return 65.0;
   if (mode === 'azu') return (AZU_RANGE[cancha] || AZU_RANGE.CNN).hi;
+  if (mode === 'al') return AL_LIMIT;
   return TML;
 }
 
 export default function ValueMatrix({ mode }) {
   const { setModal } = useAcopio();
-  const { dayHeaders, rowsHum, rowsFe, rowsAzu, humSeries, feSeries, azuSeries, canchaTitle, cancha } = useCanchaView();
-  const rows = mode === 'fe' ? rowsFe : mode === 'azu' ? rowsAzu : rowsHum;
-  const series = mode === 'fe' ? feSeries : mode === 'azu' ? azuSeries : humSeries;
-  const legend = mode === 'fe' ? FE_LEGEND : mode === 'azu' ? azuLegend(cancha) : HUM_LEGEND;
+  const { dayHeaders, rowsHum, rowsFe, rowsAzu, rowsAl, humSeries, feSeries, azuSeries, alSeries, canchaTitle, cancha } = useCanchaView();
+  const rows = mode === 'fe' ? rowsFe : mode === 'azu' ? rowsAzu : mode === 'al' ? rowsAl : rowsHum;
+  const series = mode === 'fe' ? feSeries : mode === 'azu' ? azuSeries : mode === 'al' ? alSeries : humSeries;
+  const legend = mode === 'fe' ? FE_LEGEND : mode === 'azu' ? azuLegend(cancha) : mode === 'al' ? AL_LEGEND : HUM_LEGEND;
   const { title, label, modalTitle, chartColor, chartTitle } = PARAM[mode];
   const subtitle = mode === 'fe'
     ? 'Clic en un feeder en acopio para registrar la Ley de Fe (%)'
     : mode === 'azu'
       ? 'Clic en un feeder en acopio para registrar la Ley de Azufre (%)'
-      : `Clic en un feeder en acopio para registrar la humedad medida (%) · TML ${tmlStr}%`;
+      : mode === 'al'
+        ? 'Clic en un feeder en acopio para registrar la Ley de Alúmina (%)'
+        : `Clic en un feeder en acopio para registrar la humedad medida (%) · TML ${tmlStr}%`;
 
   const openEdit = (sector, idx) => {
     const cell = rows.find((r) => r.sector === sector).cells[idx];

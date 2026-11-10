@@ -41,7 +41,12 @@ function Dashboard() {
               <ValueMatrix mode="fe" />
             </div>
           )}
-          {!isSF && <ValueMatrix mode="azu" />}
+          {!isSF && (
+            <div className="print-pair" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <ValueMatrix mode="azu" />
+              <ValueMatrix mode="al" />
+            </div>
+          )}
           {isSF && <SinterFeedPanel />}
         </div>
 

@@ -90,3 +90,11 @@ export function azuColor(v, cancha) {
   if (v > lo) return { bg: '#ef9b3a', fg: '#2a1c00' };
   return { bg: '#1f9d55', fg: '#04160c' };
 }
+
+// Alumina: un solo umbral para ambas canchas, sin tramo naranjo intermedio.
+export const AL_LIMIT = 1.5;
+
+export function alColor(v) {
+  if (v > AL_LIMIT) return { bg: '#dc2626', fg: '#ffffff' };
+  return { bg: '#1f9d55', fg: '#04160c' };
+}
