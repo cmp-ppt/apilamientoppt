@@ -144,6 +144,8 @@ export function useCanchaView(canchaOverride) {
     const avgFe = feToday.length ? feToday.reduce((a, b) => a + b, 0) / feToday.length : null;
     const sToday = sectors.map((s) => azu?.[month]?.[cancha]?.[shift]?.[s]?.[refIdx]).filter((v) => v != null && !isNaN(v)).map(Number);
     const avgS = sToday.length ? sToday.reduce((a, b) => a + b, 0) / sToday.length : null;
+    const alToday = sectors.map((s) => al?.[month]?.[cancha]?.[shift]?.[s]?.[refIdx]).filter((v) => v != null && !isNaN(v)).map(Number);
+    const avgAl = alToday.length ? alToday.reduce((a, b) => a + b, 0) / alToday.length : null;
 
     let nextV;
     if (vesselsFor(month).length) {
@@ -167,6 +169,10 @@ export function useCanchaView(canchaOverride) {
     const sbm = azu?.[month]?.[cancha]?.[shift] || {};
     for (const s in sbm) { for (const k in sbm[s]) { const v = sbm[s][k]; if (v != null && !isNaN(v)) { sMonth.push(Number(v)); sMaxDay = Math.max(sMaxDay, +k + 1); } } }
     const avgSMonth = sMonth.length ? sMonth.reduce((a, b) => a + b, 0) / sMonth.length : null;
+    const alMonth = []; let alMaxDay = 0;
+    const albm = al?.[month]?.[cancha]?.[shift] || {};
+    for (const s in albm) { for (const k in albm[s]) { const v = albm[s][k]; if (v != null && !isNaN(v)) { alMonth.push(Number(v)); alMaxDay = Math.max(alMaxDay, +k + 1); } } }
+    const avgAlMonth = alMonth.length ? alMonth.reduce((a, b) => a + b, 0) / alMonth.length : null;
 
     // Series diarias (mes completo) para los mini-graficos de tendencia en las tarjetas KPI
     // y para los graficos de Tendencia del mes junto a cada matriz.
@@ -194,6 +200,8 @@ export function useCanchaView(canchaOverride) {
       { label: 'Ley Fe mes', value: avgFeMonth != null ? (Math.round(avgFeMonth * 100) / 100).toFixed(2).replace('.', ',') + '%' : '—', sub: feMaxDay ? 'hasta el día ' + String(feMaxDay).padStart(2, '0') : 'sin registro', color: avgFeMonth != null ? feColor(avgFeMonth).bg : '#1a73e8', series: feSeries },
       { label: 'Ley S día', value: avgS != null ? (Math.round(avgS * 100) / 100).toFixed(2).replace('.', ',') + '%' : '—', sub: sToday.length ? sToday.length + (sToday.length === 1 ? ' feeder medido' : ' feeders medidos') : 'sin registro', color: avgS != null ? azuColor(avgS, cancha).bg : '#1a73e8' },
       { label: 'Ley S mes', value: avgSMonth != null ? (Math.round(avgSMonth * 100) / 100).toFixed(2).replace('.', ',') + '%' : '—', sub: sMaxDay ? 'hasta el día ' + String(sMaxDay).padStart(2, '0') : 'sin registro', color: avgSMonth != null ? azuColor(avgSMonth, cancha).bg : '#1a73e8', series: azuSeries },
+      { label: 'Ley Al día', value: avgAl != null ? (Math.round(avgAl * 100) / 100).toFixed(2).replace('.', ',') + '%' : '—', sub: alToday.length ? alToday.length + (alToday.length === 1 ? ' feeder medido' : ' feeders medidos') : 'sin registro', color: avgAl != null ? alColor(avgAl).bg : '#1a73e8' },
+      { label: 'Ley Al mes', value: avgAlMonth != null ? (Math.round(avgAlMonth * 100) / 100).toFixed(2).replace('.', ',') + '%' : '—', sub: alMaxDay ? 'hasta el día ' + String(alMaxDay).padStart(2, '0') : 'sin registro', color: avgAlMonth != null ? alColor(avgAlMonth).bg : '#1a73e8', series: alSeries },
       { label: 'Acopio sobre secado', value: String(contamTotal), sub: 'eventos en el mes', color: contamTotal > 0 ? '#dc2626' : '#1f9d55' },
       { label: 'Próximo embarque', value: nextV.txt, sub: nextV.sub, color: '#182a44' },
     ];

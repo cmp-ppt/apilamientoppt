@@ -28,7 +28,7 @@ function Dashboard() {
         <TabBar />
       </div>
 
-      {!isSF && <KpiStrip kpis={cancha_.kpis} columns={5} />}
+      {!isSF && <KpiStrip kpis={cancha_.kpis} columns={6} />}
       {isSF && <KpiStrip kpis={sf.sfKpis} columns={6} />}
       {isSF && <KpiStrip kpis={sf.sfKpisMonth} columns={6} />}
 
