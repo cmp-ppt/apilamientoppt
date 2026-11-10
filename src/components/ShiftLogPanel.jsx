@@ -65,7 +65,7 @@ function Field({ label, icon, children }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
       <span className="scada-label" style={{ width: 82, flex: 'none', fontSize: 9.5, display: 'flex', alignItems: 'center', gap: 5 }}>
-        {icon && <span style={{ color: '#54637a', flex: 'none', display: 'flex' }}><KpiIcon name={icon} size={13} /></span>}
+        {icon && <span style={{ color: '#54637a', flex: 'none', display: 'flex' }}><KpiIcon name={icon} size={16} /></span>}
         {label}
       </span>
       {children}

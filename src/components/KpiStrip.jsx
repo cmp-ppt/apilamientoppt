@@ -29,11 +29,11 @@ export default function KpiStrip({ kpis, columns }) {
               <div className="scada-label" style={{ paddingTop: 2 }}>{k.label}</div>
               {k.icon && (
                 <div style={{
-                  width: 26, height: 26, borderRadius: 7, flex: 'none',
+                  width: 34, height: 34, borderRadius: 8, flex: 'none',
                   background: shade(badgeColor, 0.85), color: badgeColor,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
-                  <KpiIcon name={k.icon} size={15} />
+                  <KpiIcon name={k.icon} size={21} />
                 </div>
               )}
             </div>
