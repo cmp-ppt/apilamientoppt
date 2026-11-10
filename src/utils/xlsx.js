@@ -88,6 +88,7 @@ export function serialToDate(s) {
 // encabezados, datos desde la fila 3. Columnas por cancha (A=fecha):
 // CNN  B=Hierro(Fe) C=Azufre D=Fosforo(no usado) E=Humedad F=Granulometria(no usado) G=Produccion(no usado)
 // PM   H=Hierro(Fe) I=Azufre J=Fosforo(no usado) K=Humedad L=Granulometria(no usado) M=Produccion(no usado)
+// N=Alumina CNN  O=Alumina PM
 // Un dia sin produccion queda con Hierro en 0 (o la celda vacia) — se omite
 // ese dia para esa cancha en vez de importar un 0% de ley/humedad falso.
 export async function xlsxRows(buf) {
@@ -104,9 +105,11 @@ export async function xlsxRows(buf) {
       feCNN: noCNN ? null : c[2],
       azuCNN: noCNN ? null : c[3],
       humCNN: noCNN ? null : c[5],
+      alCNN: noCNN ? null : c[14],
       fePM: noPM ? null : c[8],
       azuPM: noPM ? null : c[9],
       humPM: noPM ? null : c[11],
+      alPM: noPM ? null : c[15],
     });
   }
   return rows;

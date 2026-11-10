@@ -427,6 +427,7 @@ export function useAcopioStore(accessToken, userEmail, userName) {
     const nextHum = JSON.parse(JSON.stringify(hum || {}));
     const nextFe = JSON.parse(JSON.stringify(fe || {}));
     const nextAzu = JSON.parse(JSON.stringify(azu || {}));
+    const nextAl = JSON.parse(JSON.stringify(al || {}));
     const SH = ['D', 'N'];
     const setNested = (obj, mo, ca, sh, fd, idx, val) => {
       obj[mo] = obj[mo] || {}; obj[mo][ca] = obj[mo][ca] || {}; obj[mo][ca][sh] = obj[mo][ca][sh] || {};
@@ -434,7 +435,7 @@ export function useAcopioStore(accessToken, userEmail, userName) {
     };
     let filled = 0;
     let otherMonths = 0;
-    const map = { CNN: { fe: 'feCNN', hum: 'humCNN', azu: 'azuCNN' }, PM: { fe: 'fePM', hum: 'humPM', azu: 'azuPM' } };
+    const map = { CNN: { fe: 'feCNN', hum: 'humCNN', azu: 'azuCNN', al: 'alCNN' }, PM: { fe: 'fePM', hum: 'humPM', azu: 'azuPM', al: 'alPM' } };
     for (const row of rows) {
       const [Y, M, D] = row.date.split('-').map(Number);
       const mo = Y + '-' + String(M).padStart(2, '0');
@@ -446,25 +447,26 @@ export function useAcopioStore(accessToken, userEmail, userName) {
         for (const fd of SECTORS[ca]) {
           const st = occ[fd] && occ[fd][idx];
           if (st === 'fresca') {
-            const hv = row[map[ca].hum], fv = row[map[ca].fe], av = row[map[ca].azu];
+            const hv = row[map[ca].hum], fv = row[map[ca].fe], av = row[map[ca].azu], alv = row[map[ca].al];
             for (const sh of SH) {
               if (hv != null && !isNaN(hv)) { setNested(nextHum, mo, ca, sh, fd, idx, Math.round(hv * 100) / 100); filled++; }
               if (fv != null && !isNaN(fv)) { setNested(nextFe, mo, ca, sh, fd, idx, Math.round(fv * 100) / 100); }
               if (av != null && !isNaN(av)) { setNested(nextAzu, mo, ca, sh, fd, idx, Math.round(av * 100) / 100); }
+              if (alv != null && !isNaN(alv)) { setNested(nextAl, mo, ca, sh, fd, idx, Math.round(alv * 100) / 100); }
             }
           }
         }
       }
     }
-    saveHum(nextHum); saveFe(nextFe); saveAzu(nextAzu);
+    saveHum(nextHum); saveFe(nextFe); saveAzu(nextAzu); saveAl(nextAl);
     logEvent('Importó Excel', 'IMPORTACIÓN', `${file.name} · mes ${month} · ${filled} valores aplicados · ${otherMonths} días de otros meses ignorados`);
     return {
       ok: true,
       message: filled > 0
-        ? `Se aplicaron los valores de humedad, Ley Fe y Ley de Azufre del mes ${month} a los feeders en acopio fresco${otherMonths > 0 ? ` (se ignoraron ${otherMonths} días de otros meses del Excel)` : ''}.`
+        ? `Se aplicaron los valores de humedad, Ley Fe, Ley de Azufre y Ley de Alúmina del mes ${month} a los feeders en acopio fresco${otherMonths > 0 ? ` (se ignoraron ${otherMonths} días de otros meses del Excel)` : ''}.`
         : `No se encontraron días del mes ${month} con un feeder en acopio fresco en el Excel, así que no se aplicó ningún valor.${otherMonths > 0 ? ` (se ignoraron ${otherMonths} días de otros meses)` : ''}`,
     };
-  }, [hum, fe, azu, data, month, saveHum, saveFe, saveAzu, logEvent]);
+  }, [hum, fe, azu, al, data, month, saveHum, saveFe, saveAzu, saveAl, logEvent]);
 
   const importExcelSinter = useCallback(async (file) => {
     let rows;
