@@ -1,8 +1,8 @@
 import { useAcopio } from '../store/AcopioContext';
 
 const TABS = [
-  { key: 'CNN', label: 'ACOPIO CNN', sub: '6 feeders' },
-  { key: 'PM', label: 'ACOPIO MAGNETITA', sub: '5 feeders' },
+  { key: 'PM', label: 'CANCHA MAGNETITA', sub: '5 feeders' },
+  { key: 'CNN', label: 'CANCHA CNN', sub: '6 feeders' },
   { key: 'SF', label: 'SINTER FEED', sub: '6 feeders' },
 ];
 
