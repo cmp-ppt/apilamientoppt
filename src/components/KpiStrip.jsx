@@ -1,4 +1,6 @@
 import { ResponsiveContainer, AreaChart, Area, YAxis } from 'recharts';
+import { shade } from '../utils/color';
+import KpiIcon from './KpiIcon';
 
 // Sin esto, el eje usa un dominio [0, auto] por defecto: para series con poca
 // variacion relativa a 0 (ej. humedad entre 8 y 10) la linea se ve casi plana,
@@ -19,9 +21,22 @@ export default function KpiStrip({ kpis, columns }) {
     <div className="kpi-grid" style={{ display: 'grid', gridTemplateColumns: `repeat(${columns || kpis.length}, 1fr)`, gap: 8 }}>
       {kpis.map((k, i) => {
         const hasSeries = k.series && k.series.some((p) => p.value != null);
+        const badgeColor = k.iconColor || k.color;
         return (
-          <div key={i} className="scada-panel" style={{ padding: '10px 12px' }}>
-            <div className="scada-label">{k.label}</div>
+          <div key={i} className="scada-panel kpi-card" style={{ padding: '10px 12px 10px 15px', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 3, background: badgeColor }} />
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
+              <div className="scada-label" style={{ paddingTop: 2 }}>{k.label}</div>
+              {k.icon && (
+                <div style={{
+                  width: 26, height: 26, borderRadius: 7, flex: 'none',
+                  background: shade(badgeColor, 0.85), color: badgeColor,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <KpiIcon name={k.icon} size={15} />
+                </div>
+              )}
+            </div>
             <div
               className="font-mono-scada kpi-value-glow"
               style={{ fontWeight: 700, fontSize: 20, lineHeight: 1.15, marginTop: 4, color: k.color }}

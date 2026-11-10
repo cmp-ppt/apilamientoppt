@@ -1,4 +1,5 @@
 import { useAcopio } from '../store/AcopioContext';
+import KpiIcon from './KpiIcon';
 
 const GROUPS = ['G1', 'G2', 'G3', 'G4'];
 
@@ -40,7 +41,7 @@ export default function ShiftLogPanel() {
           />
         </Field>
 
-        <Field label="USO BULLDOZER">
+        <Field label="USO BULLDOZER" icon="bulldozer">
           <div style={{ display: 'flex', gap: 5 }}>
             {[['Sí', 'si'], ['No', 'no']].map(([label, v]) => (
               <button key={v} onClick={() => setLog('bulldozer', rec.bulldozer === v ? '' : v)} style={segBtn(rec.bulldozer === v, v === 'si' ? '#1f9d55' : '#54637a')}>{label}</button>
@@ -48,7 +49,7 @@ export default function ShiftLogPanel() {
           </div>
         </Field>
 
-        <Field label="USO EXCAVADORA">
+        <Field label="USO EXCAVADORA" icon="excavator">
           <div style={{ display: 'flex', gap: 5 }}>
             {[['Sí', 'si'], ['No', 'no']].map(([label, v]) => (
               <button key={v} onClick={() => setLog('excavadora', rec.excavadora === v ? '' : v)} style={segBtn(rec.excavadora === v, v === 'si' ? '#1f9d55' : '#54637a')}>{label}</button>
@@ -60,10 +61,13 @@ export default function ShiftLogPanel() {
   );
 }
 
-function Field({ label, children }) {
+function Field({ label, icon, children }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-      <span className="scada-label" style={{ width: 82, flex: 'none', fontSize: 9.5 }}>{label}</span>
+      <span className="scada-label" style={{ width: 82, flex: 'none', fontSize: 9.5, display: 'flex', alignItems: 'center', gap: 5 }}>
+        {icon && <span style={{ color: '#54637a', flex: 'none', display: 'flex' }}><KpiIcon name={icon} size={13} /></span>}
+        {label}
+      </span>
       {children}
     </div>
   );

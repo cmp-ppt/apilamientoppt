@@ -5,7 +5,7 @@ import { useCanchaView } from '../hooks/useDerived';
 import { exportCSV } from '../utils/csv';
 import { TML } from '../constants';
 import StatusDot from './StatusDot';
-import cmpLogo from '../assets/cmp-logo.jpg';
+import cmpLogo from '../assets/cmp-logo.png';
 
 function Clock() {
   const [now, setNow] = useState(new Date());

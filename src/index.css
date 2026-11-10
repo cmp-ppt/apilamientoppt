@@ -60,6 +60,14 @@ body {
   border-bottom: 1px solid var(--border);
 }
 
+.kpi-card {
+  transition: box-shadow .15s ease, transform .15s ease;
+}
+.kpi-card:hover {
+  box-shadow: 0 4px 14px rgba(24, 42, 68, 0.1);
+  transform: translateY(-1px);
+}
+
 .glow-run {
   box-shadow: 0 0 8px #1f9d5544, 0 0 2px #1f9d5588;
 }

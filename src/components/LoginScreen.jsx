@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../store/AuthContext';
-import cmpLogo from '../assets/cmp-logo.jpg';
+import cmpLogo from '../assets/cmp-logo.png';
 
 export default function LoginScreen() {
   const { signIn } = useAuth();
