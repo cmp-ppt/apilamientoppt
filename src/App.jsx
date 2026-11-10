@@ -59,7 +59,7 @@ function Dashboard() {
 
       {!isSF && <PrintShiftSummary />}
 
-      <footer className="no-print" style={{ textAlign: 'center', padding: '14px 0 6px', fontSize: 13, fontWeight: 700, color: '#54637a' }}>
+      <footer className="no-print" style={{ textAlign: 'center', padding: '14px 0 6px', fontSize: 13, color: '#54637a' }}>
         Dashboard Acopio y Secado v2.4 — Diseñado por Héctor Garrido Pérez
       </footer>
 
