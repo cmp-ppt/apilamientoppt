@@ -102,4 +102,4 @@ export function alColor(v) {
 // Rayado diagonal translúcido para marcar un día entero como "sin apilamiento
 // por mantención de planta" — se dibuja encima del color real de la celda
 // (que igual puede asomar debajo) en vez de reemplazarlo.
-export const MAINT_STRIPE = 'repeating-linear-gradient(45deg, rgba(84,99,122,.08) 0px, rgba(84,99,122,.08) 4px, rgba(84,99,122,.45) 4px, rgba(84,99,122,.45) 7px)';
+export const MAINT_STRIPE = 'repeating-linear-gradient(45deg, rgba(84,99,122,0) 0px, rgba(84,99,122,0) 5px, rgba(84,99,122,.18) 5px, rgba(84,99,122,.18) 8px)';
