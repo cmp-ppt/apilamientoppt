@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useAcopio } from '../store/AcopioContext';
 import { useCanchaView } from '../hooks/useDerived';
+import { MAINT_STRIPE } from '../utils/format';
 import DayHeaderRow from './DayHeaderRow';
 import PileView from './PileView';
 import SectorTag from './SectorTag';
@@ -10,9 +11,10 @@ const STATE_LABEL = { fresca: 'FRESCA', secado: 'SECADO', libre: 'LIBRE' };
 const CONTAM_BG = 'repeating-linear-gradient(45deg,#3f77e8,#3f77e8 4px,#dc2626 4px,#dc2626 6px)';
 
 export default function EstadoMatrix() {
-  const { cycle, setRefDay, requestReset, refDay, importExcel, setModal } = useAcopio();
+  const { cycle, setRefDay, requestReset, refDay, importExcel, setModal, toggleMaintenance } = useAcopio();
   const { dayHeaders, rowsEstado, canchaTitle, contamTotal, tons, refIdx } = useCanchaView();
   const fileRef = useRef(null);
+  const isMaintToday = !!dayHeaders[refIdx]?.isMaintenance;
 
   const piles = rowsEstado.map((row) => {
     const cell = row.cells[refIdx];
@@ -45,6 +47,13 @@ export default function EstadoMatrix() {
           <div style={{ fontSize: 10.5, color: '#54637a', marginTop: 2 }}>Selecciona un día (columna cian) y haz clic en la celda para cambiar el estado · rayado = fresca sobre secado</div>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
+          <button
+            className="no-print" onClick={toggleMaintenance}
+            title="Marca el día como sin apilamiento por mantención de planta (no borra datos, solo lo indica)"
+            style={isMaintToday ? { ...smallBtn, background: '#54637a', color: '#eef1f6', borderColor: '#54637a' } : smallBtn}
+          >
+            {isMaintToday ? 'QUITAR MANTENCIÓN' : 'MARCAR MANTENCIÓN'} {String(refDay).padStart(2, '0')}
+          </button>
           <button className="no-print" onClick={requestReset} style={smallBtn}>BORRAR DÍA {String(refDay).padStart(2, '0')}</button>
           <button className="no-print" onClick={() => fileRef.current?.click()} title="Importar humedad y Ley Fe desde Excel — solo se aplican a feeders en acopio fresco" style={{ ...smallBtn, background: '#3f77e8', color: '#eef1f6', borderColor: '#3f77e8' }}>IMPORTAR EXCEL</button>
           <input ref={fileRef} type="file" accept=".xlsx" onChange={onImport} style={{ display: 'none' }} />
@@ -56,6 +65,7 @@ export default function EstadoMatrix() {
         <Legend color="#1f9d55" label="Secado" />
         <Legend color="#ffffff" border label="Libre" />
         <Legend gradient={CONTAM_BG} label={`Acopio sobre secado (${contamTotal})`} />
+        <Legend gradient={`${MAINT_STRIPE}, #ffffff`} border label="Mantención de planta" />
       </div>
 
       <div className="scada-label" style={{ fontSize: 9, marginBottom: 6 }}>VISTA DE ACOPIO · DÍA {String(refDay).padStart(2, '0')}</div>
@@ -71,14 +81,15 @@ export default function EstadoMatrix() {
               </div>
               {row.cells.map((c) => {
                 const bg = c.state === 'fresca' && c.isBad ? CONTAM_BG : STATE_BG[c.state];
+                const isMaint = !!dayHeaders[c.day - 1]?.isMaintenance;
                 return (
                   <div
                     key={c.day}
-                    title={`${row.sector} · día ${String(c.day).padStart(2, '0')} · ${c.state}${c.dias ? ' · ' + c.dias + 'd secado' : ''}`}
+                    title={`${row.sector} · día ${String(c.day).padStart(2, '0')} · ${c.state}${c.dias ? ' · ' + c.dias + 'd secado' : ''}${isMaint ? ' · sin apilamiento (mantención)' : ''}`}
                     onClick={() => (c.isRef ? cycle(row.sector, c.day - 1) : setRefDay(c.day))}
                     className="matrix-cell"
                     style={{
-                      width: 34, height: 30, background: bg, cursor: 'pointer',
+                      width: 34, height: 30, background: isMaint ? `${MAINT_STRIPE}, ${bg}` : bg, cursor: 'pointer',
                       boxShadow: c.isBad ? 'inset 0 0 0 2px #dc2626' : c.isRef ? 'inset 0 0 0 2px #1a73e8' : 'none',
                       opacity: c.isRef ? 1 : 0.85,
                     }}

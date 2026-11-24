@@ -1,3 +1,5 @@
+import { MAINT_STRIPE } from '../utils/format';
+
 export default function DayHeaderRow({ dayHeaders, onSelectDay, colWidth = 34, labelWidth = 62 }) {
   return (
     <div style={{ display: 'flex' }}>
@@ -5,10 +7,12 @@ export default function DayHeaderRow({ dayHeaders, onSelectDay, colWidth = 34, l
       {dayHeaders.map((d) => (
         <div
           key={d.day}
+          title={d.isMaintenance ? `${d.label} · sin apilamiento (mantención de planta)` : undefined}
           onClick={() => onSelectDay(d.day)}
           style={{
             width: colWidth, flex: 'none', textAlign: 'center', padding: '4px 0 5px', cursor: 'pointer',
-            borderRight: '1px solid #e2e7ef', background: d.isRef ? '#f6f8fb' : 'transparent',
+            borderRight: '1px solid #e2e7ef',
+            background: d.isMaintenance ? `${MAINT_STRIPE}, ${d.isRef ? '#f6f8fb' : '#ffffff'}` : (d.isRef ? '#f6f8fb' : 'transparent'),
             borderBottom: d.vesselOp ? `2px solid ${d.vesselOp === 'hierro' ? '#3f77e8' : d.vesselOp === 'cobre' ? '#ef9b3a' : '#9aa7b8'}` : '1px solid #e2e7ef',
           }}
         >

@@ -7,7 +7,7 @@ import { daysInMonth, parseMonth, streak, fmtHum, fmtCell, fmtSF, fmtSFShort, sp
 // Pass canchaOverride (e.g. 'CNN') to read a specific cancha regardless of the active tab —
 // used by the multi-cancha overview and the cross-area alarm feed.
 export function useCanchaView(canchaOverride) {
-  const { month, cancha: activeCancha, refDay, shift, data, hum, fe, azu, al, vessels, vesselsFor, eventForDay, ensureMonth } = useAcopio();
+  const { month, cancha: activeCancha, refDay, shift, data, hum, fe, azu, al, vessels, vesselsFor, eventForDay, ensureMonth, maintenance } = useAcopio();
   const cancha = canchaOverride || activeCancha;
   return useMemo(() => {
     const isSF = cancha === 'SF';
@@ -30,6 +30,8 @@ export function useCanchaView(canchaOverride) {
       }
     }
 
+    const maintDays = maintenance?.[month]?.[cancha] || {};
+
     const dayHeaders = [];
     for (let dnum = 1; dnum <= dim; dnum++) {
       const ev = eventForDay(month, dnum);
@@ -39,6 +41,7 @@ export function useCanchaView(canchaOverride) {
         dow: DOW[new Date(y, m - 1, dnum).getDay()],
         isRef: dnum === refDay,
         vesselOp: ev ? ev.op : null,
+        isMaintenance: !!maintDays[dnum - 1],
       });
     }
 
@@ -217,7 +220,7 @@ export function useCanchaView(canchaOverride) {
       monthLabel: MESES[m - 1] + ' ' + y,
       canchaTitle: cancha === 'CNN' ? 'Cancha CNN' : cancha === 'PM' ? 'Cancha Magnetita' : 'Sinter Feed',
     };
-  }, [month, cancha, refDay, shift, data, hum, fe, azu, al, vessels, vesselsFor, eventForDay, ensureMonth]);
+  }, [month, cancha, refDay, shift, data, hum, fe, azu, al, vessels, vesselsFor, eventForDay, ensureMonth, maintenance]);
 }
 
 export function useSFView() {

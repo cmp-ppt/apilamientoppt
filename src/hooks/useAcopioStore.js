@@ -90,6 +90,7 @@ export function useAcopioStore(accessToken, userEmail, userName) {
   const [sinter, setSinterState] = useState(() => migrateSinter(loadJSON(KEYS.sinter, {})));
   const [sfOcc, setSfOccState] = useState(() => loadJSON(KEYS.sfOcc, {}));
   const [log, setLogState] = useState(() => loadJSON(KEYS.log, {}));
+  const [maintenance, setMaintenanceState] = useState(() => loadJSON(KEYS.maintenance, {}));
   const [auditLog, setAuditLogState] = useState(() => loadJSON(KEYS.auditLog, []));
   const [vessels, setVesselsState] = useState(() => {
     const v = loadJSON(KEYS.vessels, null);
@@ -141,6 +142,7 @@ export function useAcopioStore(accessToken, userEmail, userName) {
     if (map[KEYS.azu] != null) { saveJSON(KEYS.azu, map[KEYS.azu]); setAzuState(map[KEYS.azu]); }
     if (map[KEYS.al] != null) { saveJSON(KEYS.al, map[KEYS.al]); setAlState(map[KEYS.al]); }
     if (map[KEYS.log] != null) { saveJSON(KEYS.log, map[KEYS.log]); setLogState(map[KEYS.log]); }
+    if (map[KEYS.maintenance] != null) { saveJSON(KEYS.maintenance, map[KEYS.maintenance]); setMaintenanceState(map[KEYS.maintenance]); }
     if (Array.isArray(map[KEYS.auditLog])) {
       setAuditLogState((prev) => {
         const byId = new Map((prev || []).map((e) => [e.id, e]));
@@ -185,6 +187,7 @@ export function useAcopioStore(accessToken, userEmail, userName) {
   const saveSinter = useCallback((next) => { saveJSON(KEYS.sinter, next); setSinterState(next); cloudPut(KEYS.sinter, next); }, [cloudPut]);
   const saveSFOcc = useCallback((next) => { saveJSON(KEYS.sfOcc, next); setSfOccState(next); cloudPut(KEYS.sfOcc, next); }, [cloudPut]);
   const saveLog = useCallback((next) => { saveJSON(KEYS.log, next); setLogState(next); cloudPut(KEYS.log, next); }, [cloudPut]);
+  const saveMaintenance = useCallback((next) => { saveJSON(KEYS.maintenance, next); setMaintenanceState(next); cloudPut(KEYS.maintenance, next); }, [cloudPut]);
   const saveVessels = useCallback((next) => { saveJSON(KEYS.vessels, next); setVesselsState(next); cloudPut(KEYS.vessels, next); }, [cloudPut]);
   const saveAuditLog = useCallback((next) => { saveJSON(KEYS.auditLog, next); setAuditLogState(next); cloudPut(KEYS.auditLog, next); }, [cloudPut]);
 
@@ -342,6 +345,20 @@ export function useAcopioStore(accessToken, userEmail, userName) {
     else next[month][refDay][shift][field] = value;
     saveLog(next);
   }, [log, month, refDay, shift, saveLog]);
+
+  // Marca/desmarca el día de referencia como "sin apilamiento por mantención
+  // de planta" — un flag plano por cancha/día, independiente de los estados
+  // de ocupación y de las leyes registradas (no borra ni toca nada más).
+  const toggleMaintenance = useCallback(() => {
+    const idx = refDay - 1;
+    const next = JSON.parse(JSON.stringify(maintenance || {}));
+    next[month] = next[month] || {}; next[month][cancha] = next[month][cancha] || {};
+    const was = !!next[month][cancha][idx];
+    if (was) delete next[month][cancha][idx];
+    else next[month][cancha][idx] = true;
+    saveMaintenance(next);
+    logEvent(was ? 'Quitó mantención' : 'Marcó mantención', 'MANTENCIÓN', `${cancha} · día ${String(refDay).padStart(2, '0')}`);
+  }, [maintenance, month, cancha, refDay, saveMaintenance, logEvent]);
 
   const typeKeyToOp = (tk) => {
     if (tk === 'hierro_apf') return { op: 'hierro', prod: 'APF' };
@@ -535,7 +552,7 @@ export function useAcopioStore(accessToken, userEmail, userName) {
   return {
     // state
     month, cancha, refDay, shift,
-    data, hum, fe, azu, al, sinter, sfOcc, log, vessels, auditLog,
+    data, hum, fe, azu, al, sinter, sfOcc, log, vessels, auditLog, maintenance,
     modal, modalVesselType, syncStatus,
     cloudEnabled: cloudEnabled(),
     editingRef,
@@ -545,6 +562,6 @@ export function useAcopioStore(accessToken, userEmail, userName) {
     vesselsFor, eventForDay, effHum, ensureMonth: (d, mo) => ensureMonth(d, mo), ensureSFMonth: (o, mo) => ensureSFMonth(o, mo),
     // actions
     shiftMonth, cycle, cycleSF, setHumAt, setFeAt, setAzuAt, setAlAt, setSinterAt, setSinterMulti, setLog,
-    saveVesselForm, deleteVessel, doReset, requestReset, importExcel, importExcelSinter,
+    saveVesselForm, deleteVessel, doReset, requestReset, importExcel, importExcelSinter, toggleMaintenance,
   };
 }

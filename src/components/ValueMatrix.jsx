@@ -1,7 +1,7 @@
 import { useAcopio } from '../store/AcopioContext';
 import { useCanchaView } from '../hooks/useDerived';
 import { TML } from '../constants';
-import { AZU_RANGE, AL_LIMIT } from '../utils/format';
+import { AZU_RANGE, AL_LIMIT, MAINT_STRIPE } from '../utils/format';
 import DayHeaderRow from './DayHeaderRow';
 import SectorTag from './SectorTag';
 import TrendChart from './TrendChart';
@@ -112,24 +112,28 @@ export default function ValueMatrix({ mode }) {
                   <div className="font-mono-scada matrix-sticky-col" style={{ width: 62, flex: 'none', display: 'flex', alignItems: 'center', gap: 4, padding: '0 6px', borderRight: '1px solid #e2e7ef', borderBottom: '1px solid #e2e7ef', fontWeight: 700, fontSize: 10.5, color: '#1a73e8' }}>
                     <SectorTag sector={row.sector} />
                   </div>
-                  {row.cells.map((c) => (
-                    <div
-                      key={c.day}
-                      title={c.measured ? `${row.sector} · día ${String(c.day).padStart(2, '0')} · ${c.text}%` : c.clickable ? 'sin registro — clic para ingresar' : 'libre'}
-                      onClick={c.clickable ? () => openEdit(row.sector, c.day - 1) : undefined}
-                      className="matrix-cell font-mono-scada"
-                      style={{
-                        width: 34, height: 30,
-                        background: c.measured ? c.bg : '#ffffff',
-                        color: c.measured ? c.fg : '#9aa7b8',
-                        cursor: c.clickable ? 'pointer' : 'default',
-                        fontSize: 8.5, fontWeight: c.measured ? 700 : 400,
-                        boxShadow: c.isRef ? 'inset 0 0 0 2px #1a73e8' : 'none',
-                      }}
-                    >
-                      {c.text}
-                    </div>
-                  ))}
+                  {row.cells.map((c) => {
+                    const isMaint = !!dayHeaders[c.day - 1]?.isMaintenance;
+                    const base = c.measured ? c.bg : '#ffffff';
+                    return (
+                      <div
+                        key={c.day}
+                        title={(c.measured ? `${row.sector} · día ${String(c.day).padStart(2, '0')} · ${c.text}%` : c.clickable ? 'sin registro — clic para ingresar' : 'libre') + (isMaint ? ' · sin apilamiento (mantención)' : '')}
+                        onClick={c.clickable ? () => openEdit(row.sector, c.day - 1) : undefined}
+                        className="matrix-cell font-mono-scada"
+                        style={{
+                          width: 34, height: 30,
+                          background: isMaint ? `${MAINT_STRIPE}, ${base}` : base,
+                          color: c.measured ? c.fg : '#9aa7b8',
+                          cursor: c.clickable ? 'pointer' : 'default',
+                          fontSize: 8.5, fontWeight: c.measured ? 700 : 400,
+                          boxShadow: c.isRef ? 'inset 0 0 0 2px #1a73e8' : 'none',
+                        }}
+                      >
+                        {c.text}
+                      </div>
+                    );
+                  })}
                 </div>
               ))}
             </div>
